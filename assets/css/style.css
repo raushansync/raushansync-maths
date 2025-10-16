@@ -1,0 +1,145 @@
+/* No changes needed to this file */
+:root {
+    --primary-color: #3b82f6;
+    --primary-color-dark: #2563eb;
+    --background-color: #f9fafb;
+    --text-color: #1f2937;
+    --secondary-text-color: #6b7280;
+    --card-background: #ffffff;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+    --border-color: #e5e7eb;
+    --header-bg: rgba(255, 255, 255, 0.85);
+    /* Consistent header height across breakpoints */
+    --header-height: 70px;
+}
+
+.dark-mode {
+    --primary-color: #60a5fa;
+    --primary-color-dark: #3b82f6;
+    --background-color: #111827;
+    --text-color: #f9fafb;
+    --secondary-text-color: #9ca3af;
+    --card-background: #1f2937;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    --border-color: #374151;
+    --header-bg: rgba(17, 24, 39, 0.85);
+}
+
+/* --- Base Styling (Unchanged) --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-height); }
+body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); line-height: 1.6; transition: background-color 0.3s, color 0.3s; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* --- Header & Navigation (Unchanged) --- */
+.header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background-color: var(--header-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); transition: background-color 0.3s, border-bottom 0.3s; }
+
+.header-container { display: flex; justify-content: space-between; align-items: center; height: var(--header-height); }
+
+.logo { font-size: 1.5rem; font-weight: 600; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; justify-content: center; height: var(--header-height); line-height: 1; }
+
+.nav-links { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
+
+.nav-links a { text-decoration: none; color: var(--text-color); font-weight: 500; padding: 0.5rem 0; position: relative; transition: color 0.3s; }
+
+.nav-links a.active { color: var(--primary-color); font-weight: 600; }
+
+.nav-links a.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: var(--primary-color); }
+
+.header-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; height: var(--header-height); }
+.header-actions { position: relative; z-index: 1200; }
+
+.navbar { display: flex; align-items: center; height: var(--header-height); position: relative; }
+
+.header svg { display: block; }
+
+/* --- Theme Toggle Button Fix --- */
+.theme-toggle-btn { 
+    /* Increased size and padding for better touch target on mobile */
+    width: 44px;
+    height: 44px;
+    padding: 0.5rem; /* Slightly larger padding */
+    font-size: 1.25rem; /* Makes the icon larger (assuming icon size scales with font-size) */
+    
+    background: none; 
+    border: 1px solid var(--border-color); 
+    cursor: pointer; 
+    /* Use primary color for better contrast and visibility */
+    color: var(--primary-color); 
+    border-radius: 8px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s; 
+}
+.theme-toggle-btn:hover { 
+    background-color: var(--card-background); 
+    /* Optional: Darken primary color on hover */
+    color: var(--primary-color-dark);
+}
+.theme-toggle-btn .icon-moon,
+.theme-toggle-btn .icon-sun {
+    /* Ensure icons fill the button space nicely */
+    width: 100%;
+    height: 100%;
+}
+.theme-toggle-btn .icon-moon { display: block; }
+.theme-toggle-btn .icon-sun { display: none; }
+.dark-mode .theme-toggle-btn .icon-moon { display: none; }
+.dark-mode .theme-toggle-btn .icon-sun { display: block; }
+
+.hamburger { display: none; background: none; border: 1px solid var(--border-color); cursor: pointer; color: var(--text-color); border-radius: 8px; width: 44px; height: 44px; align-items: center; justify-content: center; }
+.hamburger svg { width: 24px; height: 24px; }
+
+/* --- Main Content (Unchanged) --- */
+main { padding: calc(var(--header-height) + 40px) 0 4rem; }
+.welcome-section { text-align: center; padding-bottom: 4rem; }
+.welcome-section h1, .content-section h1, .content-section h2 { font-size: 2.25rem; margin-bottom: 0.5rem; }
+.welcome-section p { font-size: 1.1rem; color: var(--secondary-text-color); max-width: 600px; margin: 0 auto; }
+.content-section { padding: 0; }
+.content-section h1, .content-section h2 { text-align: center; margin-bottom: 2.5rem; }
+
+/* --- Card & Grid (Text Cut-off Fix) --- */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.card { 
+    background-color: var(--card-background); 
+    border: 1px solid var(--border-color); 
+    border-radius: 12px; 
+    padding: 1.5rem; 
+    box-shadow: var(--card-shadow); 
+    display: flex; 
+    flex-direction: column; 
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* FIX: Ensure long text in cards wraps correctly */
+    word-break: break-word; 
+    overflow-wrap: break-word;
+}
+.card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); }
+.card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.card p { font-size: 0.95rem; color: var(--secondary-text-color); margin-bottom: 1.5rem; flex-grow: 1; }
+.card .status { font-weight: 500; color: var(--primary-color); }
+.btn { display: inline-block; background-color: var(--primary-color); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 500; text-align: center; transition: background-color 0.3s; }
+.btn:hover { background-color: var(--primary-color-dark); }
+.btn.disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+/* --- Footer (Unchanged) --- */
+.about-container { max-width: 800px; text-align: center; }
+.about-container p { margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--secondary-text-color); }
+.footer { padding: 2.5rem 0; text-align: center; border-top: 1px solid var(--border-color); color: var(--secondary-text-color); margin-top: 4rem; }
+
+/* --- Media Queries (Unchanged, Mobile Nav/Layout) --- */
+@media (max-width: 768px) {
+    .nav-links { position: fixed; top: var(--header-height); left: 0; right: 0; z-index: 1100; background-color: var(--header-bg); flex-direction: column; align-items: center; padding: 0; gap: 0; border-bottom: none; display: none !important; pointer-events: none; }
+    .nav-links.active { display: flex !important; padding: 1rem 0; border-bottom: 1px solid var(--border-color); pointer-events: auto; }
+    .nav-links li { width: 100%; text-align: center; }
+    .nav-links a { display: block; padding: 1rem; width: 100%; }
+    .nav-links a:hover { background-color: var(--card-background); }
+    .nav-links a.active::after { display: none; }
+    .hamburger { display: flex; }
+    main { padding-top: calc(var(--header-height) + 30px); }
+    .welcome-section h1, .content-section h1, .content-section h2 { font-size: 1.75rem; }
+    
+    /* Optional: Further reduction of card content size on very small screens */
+    .card h3 { font-size: 1.15rem; }
+    .card p { font-size: 0.9rem; }
+}
