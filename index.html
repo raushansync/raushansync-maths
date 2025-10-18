@@ -12,6 +12,43 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+
+        <!-- SEO / Social -->
+        <link rel="canonical" href="https://maths.raushansync.com/">
+        <meta name="theme-color" content="#3b82f6">
+        <meta name="robots" content="index, follow">
+        <meta property="og:site_name" content="RaushanSYNC Maths">
+        <meta property="og:title" content="RaushanSYNC Maths | Home">
+        <meta property="og:description" content="A resource hub for free mathematics practice sheets and notes for students from Class 6 to Class 12, created by Raushan of IIT Madras.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://maths.raushansync.com/">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="RaushanSYNC Maths | Home">
+        <meta name="twitter:description" content="A resource hub for free mathematics practice sheets and notes for students from Class 6 to Class 12, created by Raushan of IIT Madras.">
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "RaushanSYNC Maths",
+            "url": "https://maths.raushansync.com/",
+            "author": {
+                "@type": "Person",
+                "name": "Raushan Kumar",
+                "url": "https://maths.raushansync.com/"
+            }
+        }
+        </script>
+
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (!theme && prefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -97,7 +134,15 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; RaushanSYNC 2025 | maths.raushansync.com</p>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/raushan-kumar-14807b375/" target="_blank"
+                    rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://x.com/raushansync" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://www.instagram.com/raushansync/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.facebook.com/raushansync" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a href="mailto:raushangupta5000@gmail.com">Gmail</a>
+            </div>
+            <p>&copy; 2025 Raushan Kumar. Built with curiosity.</p>
         </div>
     </footer>
 
