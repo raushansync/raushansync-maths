@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://maths.raushansync.com/sitemap.xml
+# Crawl-delay can be added if needed
