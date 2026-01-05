@@ -206,6 +206,19 @@ main { padding: calc(var(--header-height) + 40px) 0 4rem; }
 .btn:hover { background-color: var(--primary-color-dark); }
 .btn.disabled { background-color: #9ca3af; cursor: not-allowed; }
 
+/* --- Button Row Styling (for Notes/Practice buttons) --- */
+.card .btn-row { 
+    margin-top: 0.5rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.5rem; 
+}
+
+.card .btn-row .btn { 
+    margin: 0; 
+    width: 100%; 
+}
+
 /* --- Footer --- */
 .footer { 
     padding: 2.5rem 0; 
