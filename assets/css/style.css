@@ -289,3 +289,9 @@ main { padding: calc(var(--header-height) + 40px) 0 4rem; }
         gap: 1rem 1.5rem;
     }
 }
+
+
+.welcome-section p + p {
+    margin-top: 1rem;
+}
+
