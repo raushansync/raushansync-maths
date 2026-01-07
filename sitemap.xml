@@ -1,39 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://maths.raushansync.com/</loc>
-    <priority>1.00</priority>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/about.html</loc>
-    <priority>0.80</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class06/</loc>
-    <priority>0.64</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class07/</loc>
-    <priority>0.64</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class08/</loc>
-    <priority>0.64</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class09/</loc>
-    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class10/</loc>
-    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class11/</loc>
-    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
+
   <url>
     <loc>https://maths.raushansync.com/class12/</loc>
-    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
+
 </urlset>

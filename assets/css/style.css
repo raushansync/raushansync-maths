@@ -295,3 +295,18 @@ main { padding: calc(var(--header-height) + 40px) 0 4rem; }
     margin-top: 1rem;
 }
 
+/* css extra for footer */
+
+.footer-credit {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.footer-usage {
+  max-width: 640px;
+  margin: 0.5rem auto 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
