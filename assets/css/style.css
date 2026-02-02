@@ -305,21 +305,35 @@ main {
   color: var(--primary-color);
 }
 
+/* =========================================================
+   BUTTONS — Match Logo Color Exactly
+   ========================================================= */
+
 .btn {
   display: inline-block;
-  background-color: var(--primary-color);
-  color: #fff;
+  background-color: var(--primary-color); /* same as logo */
+  color: #ffffff;
+
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
   text-align: center;
-  transition: background-color 0.3s;
+
+  border: none;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
 .btn:hover {
-  background-color: var(--primary-color-dark);
+  background-color: var(--primary-color-dark); /* same family */
 }
+
+.btn:active {
+  transform: translateY(1px);
+}
+
 
 .btn.disabled {
   background-color: #9ca3af;
@@ -511,7 +525,7 @@ main {
   letter-spacing: 0.12em;
 
   color: var(--text-color);
-  opacity: 0.05;
+  opacity: 0.025;
 
   pointer-events: none;
   z-index: 0;
@@ -761,6 +775,22 @@ main {
   margin-bottom: 0.6rem;
 }
 
+
+/* =========================================================
+   PRACTICE PAGE — Layout Width Fix (Laptop/Desktop)
+   ========================================================= */
+
+.practice-page .notes-container {
+  max-width: 1200px; /* same as homepage container */
+}
+
+
+.practice-page .question-card,
+.practice-page .palette {
+  padding: 1.6rem 2rem;
+}
+
+
 /* =========================================================
    ADVANCED PRACTICE PAGE EXTENSIONS (additional css) 
    ========================================================= */
@@ -934,6 +964,7 @@ main {
   }
 }
 
+
 /* support-link div in footer*/
 .support-link {
     display: flex;
@@ -961,5 +992,4 @@ main {
     color: var(--text-color);
     opacity: 0.9;
 }
-
 
