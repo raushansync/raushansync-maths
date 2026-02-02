@@ -933,3 +933,33 @@ main {
     line-height: 1.5;
   }
 }
+
+/* support-link div in footer*/
+.support-link {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.support-link {
+    margin-top: 0.75rem;
+    text-align: center;
+}
+
+.support-link a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--secondary-text-color);
+    text-decoration: none;
+
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.support-link a:hover {
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+
