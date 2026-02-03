@@ -61,6 +61,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Auto-hide Navbar on Scroll ---
+    function setupAutoHideNav() {
+        const header = document.querySelector('.header');
+        if (!header || header.dataset.autoHideInit === 'true') return;
+
+        header.dataset.autoHideInit = 'true';
+        header.classList.add('header--auto-hide');
+
+        let lastScrollY = window.scrollY;
+        let headerHeight = header.offsetHeight || 0;
+        const scrollThreshold = 12;
+        let ticking = false;
+
+        const updateHeaderVisibility = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY <= headerHeight) {
+                header.classList.remove('header--hidden');
+                lastScrollY = currentScrollY;
+                return;
+            }
+
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks && navLinks.classList.contains('active')) {
+                header.classList.remove('header--hidden');
+                lastScrollY = currentScrollY;
+                return;
+            }
+
+            const delta = currentScrollY - lastScrollY;
+            if (Math.abs(delta) < scrollThreshold) return;
+
+            if (delta > 0) {
+                header.classList.add('header--hidden');
+            } else {
+                header.classList.remove('header--hidden');
+            }
+
+            lastScrollY = currentScrollY;
+        };
+
+        const handleScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(() => {
+                updateHeaderVisibility();
+                ticking = false;
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', () => {
+            headerHeight = header.offsetHeight || 0;
+        }, { passive: true });
+    }
+
     // --- Mobile Navigation (placeholder, will run after components load) ---
     const hamburgerBtn = document.getElementById('hamburger');
     const navLinksContainer = document.querySelector('.nav-links');
@@ -69,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setupMobileNav();
         highlightActiveLink();
     }
+
+    setupAutoHideNav();
 
     // --- Component loader utility ---
     // Loads a component from /components/{name}.html into #mount-point
@@ -112,5 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // After components are loaded, set up mobile nav and active link highlighting
         setupMobileNav();
         highlightActiveLink();
+        setupAutoHideNav();
     });
 });
