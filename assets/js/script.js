@@ -165,7 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // load both nav and footer components after DOM-ready UI wiring
     Promise.all([
         loadComponent('nav', 'nav'),
-        loadComponent('footer', 'footer')
+        loadComponent('footer', 'footer'),
+        loadComponent('support-cta', 'support-cta')
     ]).then(() => {
         // After components are loaded, set up mobile nav and active link highlighting
         setupMobileNav();
