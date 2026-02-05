@@ -1,26 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
-    <title>Page Not Found - RaushanSYNC Maths</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <meta name="description" content="The page you're looking for doesn't exist. Return to RaushanSYNC Maths to explore mathematics learning resources.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
 
-    <!-- SEO / Social -->
-    <link rel="canonical" href="https://maths.raushansync.com/404.html">
-    <meta name="robots" content="noindex, nofollow">
-    <meta property="og:site_name" content="RaushanSYNC Maths">
-    <meta property="og:title" content="Page Not Found - RaushanSYNC Maths">
-    <meta property="og:description" content="The page you're looking for doesn't exist.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://maths.raushansync.com/404.html">
+    <title>Offline | RaushanSYNC Maths</title>
+
+    <meta name="description"
+        content="You're offline, but RaushanSYNC Maths can still help you continue learning from first principles.">
+    <meta name="author" content="Raushan Kumar">
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -29,6 +19,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/manifest.json">
+
+    <link rel="stylesheet" href="/assets/css/style.css">
 
     <script>
         (function () {
@@ -41,12 +33,12 @@
     </script>
 </head>
 
-<body>
+<body class="offline-page">
 
     <header class="header">
         <div class="container header-container">
             <a href="/" class="logo">RaushanSYNC Maths</a>
-            <div id="nav"></div>
+            <div id="nav" aria-label="Primary navigation"></div>
             <div class="header-actions">
                 <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
                     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -72,34 +64,52 @@
     </header>
 
     <main>
-
-        <section class="error-section" style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+        <section class="welcome-section">
             <div class="container">
-                <h1 style="font-size: 5rem; font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">404</h1>
-                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Page Not Found</h2>
-                
-                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    The page you're looking for doesn't exist. It might have been moved, renamed, or never existed.
-                    Let's get you back on track with your mathematics learning journey.
-                </p>
+                <h1>You're Offline — But Learning Can Continue</h1>
 
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-                    <a href="/" style="display: inline-block; padding: 0.75rem 1.5rem; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: background-color 0.3s ease;">
-                        Return to Home
-                    </a>
-                    <button onclick="history.back();" style="display: inline-block; padding: 0.75rem 1.5rem; border: 2px solid #3b82f6; background-color: transparent; color: #3b82f6; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease; cursor: pointer; font-family: inherit; font-size: 1rem;">
-                        Go Back
-                    </button>
+                <div class="palette important hero-palette offline-intro">
+                    <p>
+                        It looks like your internet connection is unavailable right now. You can still open pages
+                        you've visited recently, along with saved notes and practice sets, directly from your device.
+                    </p>
+                    <p class="offline-indicator">Offline mode — Some features may be unavailable.</p>
+                </div>
+
+                <div class="navigation-buttons" aria-label="Quick navigation">
+                    <a class="btn" href="/">Home</a>
+                    <a class="btn" href="/class06/">Class 6</a>
+                    <a class="btn" href="/class07/">Class 7</a>
+                    <a class="btn" href="/class08/">Class 8</a>
+                    <a class="btn" href="/class09/">Class 9</a>
+                    <a class="btn" href="/class10/">Class 10</a>
+                    <a class="btn" href="/class11/">Class 11</a>
+                    <a class="btn" href="/class12/">Class 12</a>
                 </div>
             </div>
         </section>
 
+        <section class="content-section">
+            <div class="container">
+                <h2>Keep Learning From First Principles</h2>
+
+                <div class="palette optional">
+                    <strong>Continue with what you already have</strong>
+                    <ul>
+                        <li>Review saved notes or chapter summaries.</li>
+                        <li>Reflect on definitions and worked examples you remember.</li>
+                        <li>Continue handwritten practice on a fresh page.</li>
+                    </ul>
+                </div>
+
+                <!-- <div id="support-cta"></div> -->
+            </div>
+        </section>
     </main>
 
     <div id="footer"></div>
 
-    <script src="assets/js/script.js"></script>
-
+    <script src="/assets/js/script.js"></script>
 </body>
 
 </html>

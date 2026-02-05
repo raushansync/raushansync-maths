@@ -153,6 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupAutoHideNav();
 
+    // --- Service Worker Registration (PWA) ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+                console.warn('Service worker registration failed:', error);
+            });
+        });
+    }
+
     // --- Component loader utility ---
     // Loads a component from /components/{name}.html into #mount-point
     async function loadComponent(name, mountPointId) {
