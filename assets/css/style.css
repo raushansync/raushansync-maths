@@ -10,6 +10,7 @@
   --border-color: #e5e7eb;
   --header-bg: rgba(255, 255, 255, 0.85);
   --header-height: 70px;
+  --container-padding: 1.5rem;
 }
 
 .dark-mode {
@@ -47,7 +48,7 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--container-padding);
 }
 
 /* --- Header & Navigation --- */
@@ -471,6 +472,10 @@ main {
 }
 
 @media (max-width: 768px) {
+  :root {
+    --container-padding: 1.1rem;
+  }
+
   main {
     padding-top: calc(var(--header-height) + 30px);
   }
@@ -492,6 +497,12 @@ main {
 
   .social-links {
     gap: 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --container-padding: 0.9rem;
   }
 }
 
@@ -598,7 +609,7 @@ main {
 .notes-container {
   max-width: 880px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--container-padding);
 }
 
 /* Header */
