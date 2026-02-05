@@ -4,6 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const root = document.documentElement;
 
+    // Read the current primary theme color from CSS variables
+    function getPrimaryThemeColor() {
+        const styles = getComputedStyle(document.documentElement);
+        const primaryColor = styles.getPropertyValue('--primary-color').trim();
+        if (primaryColor) return primaryColor;
+
+        const meta = document.getElementById('theme-color-meta');
+        const fallbackColor = meta ? meta.getAttribute('content') : '';
+        return (fallbackColor || '').trim();
+    }
+
+    // Sync Chrome UI theme color with the current site theme
+    function updateBrowserThemeColor() {
+        const meta = document.getElementById('theme-color-meta');
+        if (!meta) return;
+
+        const primaryColor = getPrimaryThemeColor();
+        if (!primaryColor) return;
+
+        meta.setAttribute('content', primaryColor);
+    }
+
     const applySavedTheme = () => {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -13,11 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             root.classList.remove('dark-mode');
         }
+
+        updateBrowserThemeColor();
     };
 
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
             const isDark = root.classList.toggle('dark-mode');
+            updateBrowserThemeColor();
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
     }
