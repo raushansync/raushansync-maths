@@ -19,14 +19,14 @@ const CORE_ASSETS = [
   '/favicon-48x48.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/about.html',
-  '/class06/index.html',
-  '/class07/index.html',
-  '/class08/index.html',
-  '/class09/index.html',
-  '/class10/index.html',
-  '/class11/index.html',
-  '/class12/index.html'
+  '/about/',
+  '/class06/',
+  '/class07/',
+  '/class08/',
+  '/class09/',
+  '/class10/',
+  '/class11/',
+  '/class12/'
 ];
 
 self.addEventListener('install', (event) => {
@@ -52,7 +52,9 @@ self.addEventListener('activate', (event) => {
 function isNotesOrPractice(pathname) {
   return pathname.startsWith('/notes/')
     || pathname.startsWith('/practice/')
-    || pathname.startsWith('/practice-advanced/');
+    || pathname.startsWith('/practice-advanced/')
+    || pathname.startsWith('/practice-solution/')
+    || pathname.startsWith('/video-lessons/');
 }
 
 function isComponent(pathname) {

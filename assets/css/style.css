@@ -644,6 +644,89 @@ main {
   font-size: 1.2rem;
 }
 
+/* =========================================================
+   VIDEO LESSONS — Responsive Embeds
+   ========================================================= */
+
+.video-lesson {
+  margin-top: 2.5rem;
+}
+
+.video-lesson h2 {
+  margin-top: 0;
+}
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-description {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.08);
+  border-left: 4px solid var(--primary-color);
+  color: var(--secondary-text-color);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.video-description p {
+  margin: 0;
+}
+
+/* Video Solution Btn design on practice and adv practice page. */
+.video-solution-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+
+  color: #2563eb;
+  /* calm academic blue */
+  background-color: transparent;
+
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.video-solution-btn:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+  color: #1e40af;
+}
+
+.video-solution-btn:active {
+  transform: translateY(1px);
+}
+
+.video-solution-btn:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.4);
+  outline-offset: 2px;
+}
+
 /* Text */
 
 .notes-container p {
@@ -678,6 +761,10 @@ main {
 
 .notes-box.summary {
   border-left-color: #22c55e;
+}
+
+.notes-box.careful {
+  border-left-color: #ffbab8;
 }
 
 .notes-box h2 {
@@ -883,6 +970,17 @@ main {
    HOMEPAGE WELCOME SECTION — FINAL FIX
    ========================================================= */
 
+/* Home-only spacing tighten to match global section density */
+.home-page .welcome-section {
+  padding-bottom: 2.5rem;
+}
+
+/* Reduce oversized hero padding/margins without touching other palettes */
+.home-page .welcome-section .hero-palette {
+  padding: 1.55rem 1.75rem;
+  margin: 1.1rem 0 1.4rem;
+}
+
 /* Apply left alignment ONLY to non-hero palettes */
 .welcome-section .palette:not(.hero-palette) p {
   text-align: left;
@@ -1011,6 +1109,13 @@ main {
 @media (max-width: 640px) {
   .hero-palette p {
     line-height: 1.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .welcome-section .hero-palette {
+    padding: 1.2rem 1.25rem;
+    margin: 0.95rem 0 1.2rem;
   }
 }
 
