@@ -54,19 +54,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const hamburgerBtn = document.getElementById('hamburger');
         const navLinksContainer = document.querySelector('.nav-links');
 
-        if (hamburgerBtn && navLinksContainer) {
-            hamburgerBtn.addEventListener('click', () => {
-                const isOpen = navLinksContainer.classList.toggle('active');
-                hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-            });
+        if (!hamburgerBtn || !navLinksContainer) return;
 
-            navLinksContainer.addEventListener('click', (event) => {
-                if (event.target.tagName === 'A') {
-                    navLinksContainer.classList.remove('active');
-                    hamburgerBtn.setAttribute('aria-expanded', 'false');
-                }
-            });
-        }
+        // Avoid attaching duplicate listeners when this runs multiple times
+        if (hamburgerBtn.dataset.mobileNavInit === 'true') return;
+        hamburgerBtn.dataset.mobileNavInit = 'true';
+
+        const onHamburgerClick = () => {
+            const isOpen = navLinksContainer.classList.toggle('active');
+            hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        const onNavLinksClick = (event) => {
+            if (event.target.tagName === 'A') {
+                navLinksContainer.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+            }
+        };
+
+        hamburgerBtn.addEventListener('click', onHamburgerClick);
+        navLinksContainer.addEventListener('click', onNavLinksClick);
     }
 
     // --- Active Navbar Link Highlighter Function ---
@@ -196,15 +203,213 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // load both nav and footer components after DOM-ready UI wiring
-    Promise.all([
-        loadComponent('nav', 'nav'),
-        loadComponent('footer', 'footer'),
-        loadComponent('support-cta', 'support-cta')
-    ]).then(() => {
+    // (Component loading handled below together with progress initialization)
+
+    // --- New Navbar Setup Function ---
+    function setupNewNavbar() {
+        const hamburger = document.getElementById('navbarHamburger');
+        const menu = document.getElementById('navbarMenu');
+        const signoutBtn = document.getElementById('navbarSignoutBtn');
+        const signoutBtnDesktop = document.getElementById('navbarSignoutBtnDesktop');
+        if (!hamburger || !menu) return;
+
+        // Prevent duplicate initialization
+        if (hamburger.dataset.newNavbarInit === 'true') return;
+        hamburger.dataset.newNavbarInit = 'true';
+
+        // Toggle menu on hamburger click
+        const onNavbarHamburger = () => {
+            const isOpen = menu.classList.toggle('active');
+            hamburger.classList.toggle('active', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        hamburger.addEventListener('click', onNavbarHamburger);
+
+        // Close menu when clicking on menu items
+        const menuItems = menu.querySelectorAll('.navbar-menu-item');
+        menuItems.forEach(item => {
+            if (item.dataset.menuItemInit === 'true') return;
+            item.dataset.menuItemInit = 'true';
+            item.addEventListener('click', () => {
+                menu.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Close menu when clicking outside - attach once globally
+        if (document.documentElement.dataset.navDocClickInit !== 'true') {
+            document.documentElement.dataset.navDocClickInit = 'true';
+            document.addEventListener('click', (e) => {
+                const themeToggleBtn = document.getElementById('theme-toggle');
+                const clickedInsideThemeToggle = themeToggleBtn && themeToggleBtn.contains(e.target);
+
+                if (!hamburger.contains(e.target) && !menu.contains(e.target) && !clickedInsideThemeToggle) {
+                    menu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Handle sign out for both menu and desktop buttons
+        function attachSignOut(el) {
+            if (!el || el.dataset.signoutInit === 'true') return;
+            el.dataset.signoutInit = 'true';
+            el.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await window.signOut?.();
+                } catch (error) {
+                    console.error('Sign out error:', error);
+                }
+            });
+        }
+
+        attachSignOut(signoutBtn);
+        attachSignOut(signoutBtnDesktop);
+
+        // Display user info if logged in
+        displayUserInfo();
+    }
+
+    // --- STEP 4: Progress Tick System Initialization ---
+    // Initialize tick manager and page progress tracking
+    async function initializeProgressTracking() {
+        try {
+            // Wait for auth to be ready
+            if (window.whenAuthReady && typeof window.whenAuthReady === 'function') {
+                await window.whenAuthReady();
+            }
+
+            // Initialize tick manager for all data-tick-container elements
+            if (window.TickManager && typeof window.TickManager.initializePageTicks === 'function') {
+                await window.TickManager.initializePageTicks();
+            }
+
+            // Track this page view if user is logged in
+            if (window.isUserLoggedIn && window.isUserLoggedIn()) {
+                if (window.ProgressTracker && typeof window.ProgressTracker.loadPageProgress === 'function') {
+                    const pageProgress = await window.ProgressTracker.loadPageProgress();
+                    if (pageProgress) {
+                        window.logEvent('Page progress loaded', { 
+                            completed: pageProgress.completed, 
+                            itemType: pageProgress.itemType 
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error initializing progress tracking:', error);
+        }
+    }
+
+    // Update the component loading to also initialize progress tracking
+    (async () => {
+        await Promise.all([
+            loadComponent('nav', 'nav'),
+            loadComponent('footer', 'footer'),
+            loadComponent('support-cta', 'support-cta')
+        ]);
+        
         // After components are loaded, set up mobile nav and active link highlighting
         setupMobileNav();
         highlightActiveLink();
         setupAutoHideNav();
+
+        // --- Setup New Navbar (Hamburger & Auth) ---
+        setupNewNavbar();
+
+        // Initialize progress tracking (STEP 4)
+        await initializeProgressTracking();
+    })();
+
+    // Expose updateProgressDisplay globally for dashboard updates
+    window.updateProgressDisplay = async function() {
+        try {
+            if (window.TickManager && typeof window.TickManager.updateAllTicks === 'function') {
+                await window.TickManager.updateAllTicks();
+            }
+        } catch (error) {
+            console.error('Error updating progress display:', error);
+        }
+    };
+
+    // Listen for auth state changes and reinitialize progress tracking if needed
+    window.addEventListener('rs:auth-state-change', (event) => {
+        const session = event.detail?.session;
+        if (session && session.user) {
+            // User logged in - reinitialize progress tracking
+            if (window.ProgressTracker && typeof window.ProgressTracker.loadPageProgress === 'function') {
+                window.ProgressTracker.loadPageProgress().catch(error => {
+                    console.error('Error reloading page progress on login:', error);
+                });
+            }
+        }
+        // Logout handled by tick-manager
     });
+
+    // Re-run initialization when page is restored from bfcache or shown again
+    window.addEventListener('pageshow', (event) => {
+        // pageshow can fire when the page is restored from the back/forward cache
+        setupMobileNav();
+        highlightActiveLink();
+        setupAutoHideNav();
+        setupNewNavbar();
+    });
+
 });
+
+    // --- Display User Info in Navbar ---
+    function displayUserInfo() {
+        const userInfoDisplay = document.getElementById('userInfoDisplay');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const authDivider = document.getElementById('authDivider');
+        const signoutBtn = document.getElementById('navbarSignoutBtn');
+        const signoutBtnDesktop = document.getElementById('navbarSignoutBtnDesktop');
+
+        if (!userInfoDisplay) return;
+
+        // Listen for auth state changes
+        window.addEventListener('rs:auth-state-change', (event) => {
+            const session = event.detail?.session;
+
+            if (session?.user) {
+                const fullName = session.user.user_metadata?.full_name || session.user.email;
+                if (userNameDisplay) {
+                    userNameDisplay.textContent = fullName;
+                }
+
+                // Show user info display on desktop
+                userInfoDisplay.style.display = 'flex';
+
+                // Show sign out buttons
+                if (authDivider) authDivider.style.display = 'block';
+                if (signoutBtn) signoutBtn.style.display = 'flex';
+                if (signoutBtnDesktop) signoutBtnDesktop.style.display = 'inline-flex';
+            } else {
+                // Hide user info and sign out button when not logged in
+                userInfoDisplay.style.display = 'none';
+                if (authDivider) authDivider.style.display = 'none';
+                if (signoutBtn) signoutBtn.style.display = 'none';
+                if (signoutBtnDesktop) signoutBtnDesktop.style.display = 'none';
+            }
+        });
+
+        // Check initial auth state
+        if (window.authState?.session?.user) {
+            const fullName = window.authState.session.user.user_metadata?.full_name || window.authState.session.user.email;
+            if (userNameDisplay) {
+                userNameDisplay.textContent = fullName;
+            }
+
+            // Show user info display on desktop
+            userInfoDisplay.style.display = 'flex';
+
+            // Show sign out buttons
+            if (authDivider) authDivider.style.display = 'block';
+            if (signoutBtn) signoutBtn.style.display = 'flex';
+            if (signoutBtnDesktop) signoutBtnDesktop.style.display = 'inline-flex';
+        }
+    }

@@ -5,11 +5,20 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "lang": "en",
+  "dir": "ltr",
   "background_color": "#111827",
   "theme_color": "#3b82f6",
   "description": "RaushanSYNC Maths provides NCERT-aligned mathematics learning through guided video lessons, concept notes, and structured practice built from first principles to develop logical thinking, mathematical intuition, and deep conceptual clarity.",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.raushansync.maths",
+      "id": "com.raushansync.maths"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",

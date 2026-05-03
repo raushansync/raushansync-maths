@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta http-equiv="Cache-Control" content="no-store, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Login - RaushanSYNC Maths</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        :root {
+            --header-height: 70px;
+        }
+
+        main {
+            padding-top: calc(var(--header-height) + 40px);
+            padding-bottom: 4rem;
+        }
+
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - var(--header-height) - 60px);
+            padding: 2rem 0;
+        }
+
+        .auth-card {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .auth-header p {
+            color: var(--secondary-text-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            color: var(--text-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--card-background);
+            color: var(--text-color);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--secondary-text-color);
+        }
+
+        input:disabled {
+            background-color: rgba(0, 0, 0, 0.04);
+            cursor: not-allowed;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input-wrapper input {
+            padding-right: 40px;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--secondary-text-color);
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            transition: color 0.2s;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--primary-color);
+            transform: none;
+            background: none;
+        }
+
+        .dark-mode input:disabled {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.2s, transform 0.15s;
+            margin-bottom: 1rem;
+        }
+
+        /* Exclude header buttons from generic button styling */
+        .theme-toggle-btn,
+        .hamburger,
+        .navbar-hamburger {
+            width: 44px !important;
+            padding: 0 !important;
+            background: none !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            font-size: 0 !important;
+            font-weight: normal !important;
+            margin-bottom: 0 !important;
+            color: var(--text-color) !important;
+        }
+
+        .theme-toggle-btn {
+            color: var(--primary-color) !important;
+            margin-right: 0.5rem;
+        }
+
+        .navbar-hamburger {
+            margin-left: 0.75rem;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--primary-color-dark, var(--primary-color));
+            transform: translateY(-2px);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+            display: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .dark-mode .error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #16a34a;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+
+        .dark-mode .success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-size: 0.85rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            position: relative;
+            background: var(--card-background);
+            padding: 0 0.75rem;
+        }
+
+        .signup-link {
+            text-align: center;
+            color: var(--secondary-text-color);
+            font-size: 0.9rem;
+        }
+
+        .signup-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .signup-link a:hover {
+            color: var(--primary-color-dark, var(--primary-color));
+            text-decoration: underline;
+        }
+
+        .redirect-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+
+        .dark-mode .redirect-info {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .redirect-info.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding-top: calc(var(--header-height) + 20px);
+            }
+
+            .auth-card {
+                padding: 2rem;
+                border-radius: 12px;
+            }
+
+            .auth-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding-right: var(--container-padding);
+                padding-left: var(--container-padding);
+            }
+
+            .auth-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">RaushanSYNC Maths</a>
+            <div id="nav"></div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </button>
+</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to your account to continue</p>
+                    </div>
+
+                    <div class="redirect-info" id="redirectInfo"></div>
+                    <div class="error" id="errorMessage" role="alert" aria-live="polite"></div>
+                    <div class="success" id="successMessage" role="status" aria-live="polite"></div>
+                    <div class="loading" id="loading">Please wait...</div>
+                    <button type="button" id="googleLoginBtn" class="btn btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background-color: white; color: #333; border: 1px solid #ccc; font-weight: 500; margin-bottom: 2rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>     
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <div class="divider">
+                        <span>OR SIGN IN WITH EMAIL</span>
+                    </div>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="your@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                                <button type="button" class="password-toggle-btn" id="passwordToggle" aria-label="Toggle password visibility">
+                                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <svg class="eye-off-icon" style="display: none; width: 20px; height: 20px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="loginBtn">Sign In</button>
+
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <a href="/password-reset" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">
+                                Forgot your password?
+                            </a>
+                        </div>
+                    </form>
+
+                    <div class="divider">
+                        <span>New to RaushanSYNC?</span>
+                    </div>
+                    <div class="signup-link">
+                        Don't have an account? <a href="/signup" id="signup-link" style="text-decoration: none;">Sign up here</a>
+                    </div>
+                    <p style="font-size: 0.8em; margin-top: 15px; color: var(--secondary-text-color); text-align: center;">
+                        By continuing, you agree to our <a href="/terms/" style="color: var(--primary-color); text-decoration: none;">Terms and Conditions</a> and <a href="/privacy/" style="color: var(--primary-color); text-decoration: none;">Privacy Policy</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load dependencies first -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="/assets/js/auth-config.js"></script>
+    
+    <!-- Main app script -->
+    <script src="/assets/js/script.js"></script>
+    
+    <!-- Auth guard for protected pages -->
+    <script src="/assets/js/auth-guard.js"></script>
+
+    <script>
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const errorDiv = document.getElementById("errorMessage");
+            const loadingDiv = document.getElementById("loading");
+            const loginBtn = document.getElementById("loginBtn");
+
+            if (!email || !password) {
+                errorDiv.textContent = "Please fill in all fields.";
+                errorDiv.classList.add("show");
+                return;
+            }
+
+            if (!window.supabaseClient) {
+                errorDiv.textContent = "Authentication service unavailable.";
+                errorDiv.classList.add("show");
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loadingDiv.classList.add("show");
+            errorDiv.classList.remove("show");
+
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    errorDiv.textContent = error.message || "Login failed. Please try again.";
+                    errorDiv.classList.add("show");
+                    loginBtn.disabled = false;
+                    loadingDiv.classList.remove("show");
+                    return;
+                }
+
+                if (data.session) {
+                    // Sync user profile to database before redirecting
+                    try {
+                        await window.syncUserProfile({ updateLastLogin: true });
+                    } catch (syncErr) {
+                        // Profile sync error - continue anyway as login succeeded
+                        window.logEvent('Profile sync failed during login', { error: syncErr });
+                    }
+
+                    if (window.redirectAuthenticatedUser) {
+                        await window.redirectAuthenticatedUser("/dashboard");
+                    } else {
+                        window.location.replace("/dashboard");
+                    }
+                }
+            } catch (err) {
+                errorDiv.textContent = "An error occurred. Please try again.";
+                errorDiv.classList.add("show");
+                loginBtn.disabled = false;
+                loadingDiv.classList.remove("show");
+            }
+        }
+
+        // Password visibility toggle
+        const passwordInput = document.getElementById("password");
+        const passwordToggle = document.getElementById("passwordToggle");
+        const eyeIcon = document.querySelector(".eye-icon");
+        const eyeOffIcon = document.querySelector(".eye-off-icon");
+
+        passwordToggle.addEventListener("click", (e) => {
+            e.preventDefault();
+            const isPasswordVisible = passwordInput.type === "text";
+            passwordInput.type = isPasswordVisible ? "password" : "text";
+            eyeIcon.style.display = isPasswordVisible ? "block" : "none";
+            eyeOffIcon.style.display = isPasswordVisible ? "none" : "block";
+        });
+
+        document.getElementById("loginForm").addEventListener("submit", handleLogin);
+
+        window.addEventListener("load", () => {
+            const params = new URLSearchParams(window.location.search);
+            const redirectInfo = document.getElementById("redirectInfo");
+            
+            if (params.get("message") === "signed-out") {
+                redirectInfo.textContent = "You have been signed out successfully.";
+                redirectInfo.classList.add("show");
+            } else if (params.get("message") === "signup-success") {
+                redirectInfo.textContent = "Account created successfully! Please sign in with your credentials.";
+                redirectInfo.classList.add("show");
+            } else if (params.get("message") === "check-email") {
+                redirectInfo.textContent = "Account created! Please check your email to confirm your account before logging in.";
+                redirectInfo.style.backgroundColor = "rgba(234, 179, 8, 0.1)"; /* Yellow-ish warning background */
+                redirectInfo.style.borderLeftColor = "#eab308"; /* Yellow-ish warning border */
+                redirectInfo.classList.add("show");
+            } else if (params.get("message") === "password-reset-success") {
+                redirectInfo.textContent = "Password reset successfully! You can now sign in with your new password.";
+                redirectInfo.classList.add("show");
+            }
+            
+            if (params.get("redirect")) {
+                const signupLink = document.getElementById("signup-link");
+                if (signupLink) {
+                    signupLink.href = "/signup?redirect=" + encodeURIComponent(params.get("redirect"));
+                }
+            }
+        });
+
+        // Handle Google Login
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const errorDiv = document.getElementById("errorMessage");
+            errorDiv.classList.remove("show");
+            
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/dashboard',
+                        queryParams: {
+                            prompt: 'select_account'
+                        }
+                    }
+                });
+
+                if (error) {
+                    errorDiv.textContent = error.message || "Google login failed. Please try again.";
+                    errorDiv.classList.add("show");
+                }
+            } catch (err) {
+                console.error("Google Auth Error:", err.message);
+                errorDiv.textContent = "An error occurred during Google login. Please try again.";
+                errorDiv.classList.add("show");
+            }
+        });
+
+    </script>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered successfully'))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        }
+    </script>
+</body>
+</html>

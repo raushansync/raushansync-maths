@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
+
+    <title>Advanced Maths Track Coming in 2030 | RaushanSYNC Maths</title>
+
+    <meta name="description"
+        content="RaushanSYNC Maths is preparing undergraduate, postgraduate, and PhD learning content for a future release. Explore the roadmap preview and stay connected through the current platform.">
+
+    <meta name="author" content="Raushan Kumar">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://maths.raushansync.com/future-content/">
+
+    <meta property="og:site_name" content="RaushanSYNC Maths">
+    <meta property="og:title" content="Advanced Maths Track Coming in 2030 | RaushanSYNC Maths">
+    <meta property="og:description"
+        content="A polished preview page for undergraduate, postgraduate, and PhD maths content that is planned for a future release.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://maths.raushansync.com/future-content/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@raushansync">
+    <meta name="twitter:title" content="Advanced Maths Track Coming in 2030 | RaushanSYNC Maths">
+    <meta name="twitter:description"
+        content="Undergraduate, postgraduate, and PhD maths content is being prepared for a future release.">
+
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">RaushanSYNC Maths</a>
+            <div id="nav"></div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="welcome-section">
+            <div class="container">
+                <h1 id="future-track-heading">A more advanced track is being built</h1>
+                <div class="palette important future-roadmap-card">
+                    <span class="status">Expected in 2030</span>
+                    <h2 id="future-track-label">Advanced Study</h2>
+                    <p id="future-track-copy">
+                        Your preferred content is expected to roll out in 2030. We are shaping it with the same
+                        first-principles approach used across RaushanSYNC Maths.
+                    </p>
+                    <p>
+                        Until then, you can continue exploring the current class-based library or open your dashboard
+                        to keep your profile and progress ready.
+                    </p>
+
+                    <div class="future-roadmap-actions">
+                        <a href="/" class="btn btn-primary">Back to Home</a>
+                        <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="/assets/js/auth-config.js"></script>
+    <script src="/assets/js/auth-guard.js"></script>
+    <script src="/assets/js/script.js"></script>
+    <script>
+        (function initializeFutureContentPage() {
+            const labelMap = {
+                undergraduate: 'Undergraduate',
+                postgraduate: 'Postgraduate',
+                phd: 'PhD'
+            };
+
+            const params = new URLSearchParams(window.location.search);
+            const track = (params.get('track') || '').trim().toLowerCase();
+            const label = labelMap[track] || 'Advanced Study';
+
+            const headingEl = document.getElementById('future-track-heading');
+            const labelEl = document.getElementById('future-track-label');
+            const copyEl = document.getElementById('future-track-copy');
+
+            document.title = label + ' Content Coming in 2030 | RaushanSYNC Maths';
+
+            if (headingEl) {
+                headingEl.textContent = label + ' learning content is on the way';
+            }
+
+            if (labelEl) {
+                labelEl.textContent = label + ' Track';
+            }
+
+            if (copyEl) {
+                copyEl.textContent = 'Your preferred content is expected to roll out in 2030 for the ' + label.toLowerCase() + ' track. We are preparing it carefully so it fits the same first-principles approach used across RaushanSYNC Maths.';
+            }
+        })();
+    </script>
+</body>
+
+</html>

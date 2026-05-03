@@ -1,12 +1,49 @@
-<nav class="navbar">
-    <ul class="nav-links">
-        <li><a href="/class06/">Class 6</a></li>
-        <li><a href="/class07/">Class 7</a></li>
-        <li><a href="/class08/">Class 8</a></li>
-        <li><a href="/class09/">Class 9</a></li>
-        <li><a href="/class10/">Class 10</a></li>
-        <li><a href="/class11/">Class 11</a></li>
-        <li><a href="/class12/">Class 12</a></li>
-        <li><a href="/about/">About</a></li>
-    </ul>
+<div class="navbar-spacer"></div>
+
+<!-- User Info Display (Desktop, Logged in) -->
+<div class="user-info-display" id="userInfoDisplay" style="display: none;">
+    <span class="user-name" id="userNameDisplay"></span>
+    <button class="navbar-signout-btn" id="navbarSignoutBtnDesktop" style="display: none; margin-left: 0.5rem; padding: 0.35rem 0.6rem; font-size: 0.9rem;">Sign Out</button>
+</div>
+
+<!-- Hamburger Button -->
+<button class="navbar-hamburger" id="navbarHamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<!-- Navigation Menu (hidden by default, shown on hamburger click) -->
+<nav class="navbar-menu" id="navbarMenu">
+    <div class="navbar-menu-content">
+        <!-- Dashboard Link -->
+        <a href="/dashboard" class="navbar-menu-item navbar-dashboard-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zm0-8h2v6H3zm4-2h2v16H7zm4-2h2v18h-2zm4 4h2v14h-2zm4-1h2v15h-2z" />
+            </svg>
+            Dashboard
+        </a>
+
+        <!-- Classes Section -->
+        <div class="navbar-menu-divider">Classes</div>
+        <a href="/class06/" class="navbar-menu-item">Class 6</a>
+        <a href="/class07/" class="navbar-menu-item">Class 7</a>
+        <a href="/class08/" class="navbar-menu-item">Class 8</a>
+        <a href="/class09/" class="navbar-menu-item">Class 9</a>
+        <a href="/class10/" class="navbar-menu-item">Class 10</a>
+        <a href="/class11/" class="navbar-menu-item">Class 11</a>
+        <a href="/class12/" class="navbar-menu-item">Class 12</a>
+
+        <!-- About Link -->
+        <a href="/about/" class="navbar-menu-item">About</a>
+
+        <!-- Sign Out Link (Hidden when not logged in) -->
+        <div class="navbar-menu-divider" id="authDivider" style="display: none;"></div>
+        <button class="navbar-menu-item navbar-signout-btn" id="navbarSignoutBtn" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+            Sign Out
+        </button>
+    </div>
 </nav>

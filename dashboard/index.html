@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta http-equiv="Cache-Control" content="no-store, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>My Dashboard - RaushanSYNC Maths</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <script>
+        document.documentElement.classList.add("auth-pending");
+    </script>
+
+    <style>
+        :root {
+            --header-height: 70px;
+        }
+
+        html.auth-pending body > * {
+            visibility: hidden;
+        }
+
+        html.auth-pending body::before {
+            content: "Loading your dashboard...";
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background-color);
+            color: var(--primary-color);
+            font: 600 1.125rem/1.4 "Poppins", sans-serif;
+            visibility: visible;
+            z-index: 9999;
+        }
+
+        main {
+            padding-top: calc(var(--header-height) + 40px);
+            padding-bottom: 4rem;
+        }
+
+        .dashboard-header {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .dashboard-header p {
+            color: var(--secondary-text-color);
+            font-size: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--secondary-text-color);
+            padding: 3rem 1rem;
+        }
+
+        .loading.page-error {
+            color: #dc2626;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.accent-2 {
+            border-left-color: #f093fb;
+        }
+
+        .stat-card.accent-3 {
+            border-left-color: #4facfe;
+        }
+
+        .stat-card.accent-4 {
+            border-left-color: #43e97b;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--secondary-text-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .stat-meta {
+            font-size: 0.75rem;
+            color: var(--secondary-text-color);
+            margin-top: 0.5rem;
+        }
+
+        .section {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .critical-settings {
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            background:
+                radial-gradient(circle at top right, rgba(239, 68, 68, 0.14), transparent 45%),
+                linear-gradient(145deg, rgba(127, 29, 29, 0.22), rgba(15, 23, 42, 0.98));
+            box-shadow: 0 0 0 1px rgba(127, 29, 29, 0.2), var(--card-shadow);
+        }
+
+        .critical-settings .section-title {
+            margin-bottom: 0.45rem;
+        }
+
+        .critical-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .critical-subtitle {
+            margin: 0;
+            color: #fca5a5;
+            font-size: 0.95rem;
+        }
+
+        .critical-warning-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid rgba(248, 113, 113, 0.45);
+            background: rgba(127, 29, 29, 0.32);
+            color: #fca5a5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.2);
+        }
+
+        .critical-warning-icon svg {
+            width: 1.4rem;
+            height: 1.4rem;
+        }
+
+        .critical-warning-copy {
+            color: #fecaca;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .btn-danger-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 46px;
+            padding: 0.75rem 1.3rem;
+            border-radius: 8px;
+            border: 1px solid rgba(248, 113, 113, 0.65);
+            background: rgba(127, 29, 29, 0.16);
+            color: #fecaca;
+            font-family: "Poppins", sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+
+        .btn-danger-outline:hover {
+            background: rgba(153, 27, 27, 0.28);
+            border-color: rgba(252, 165, 165, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger-outline:focus-visible {
+            outline: 2px solid rgba(252, 165, 165, 0.75);
+            outline-offset: 2px;
+        }
+
+        .critical-delete-panel {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: max-height 0.35s ease, opacity 0.35s ease, transform 0.35s ease, margin-top 0.35s ease;
+            margin-top: 0;
+        }
+
+        .critical-delete-panel.is-visible {
+            max-height: 560px;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            margin-top: 1.25rem;
+        }
+
+        .critical-delete-panel-inner {
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 10px;
+            padding: 1.1rem;
+            background: rgba(30, 41, 59, 0.55);
+        }
+
+        .critical-form-row {
+            margin-bottom: 1rem;
+        }
+
+        .critical-form-label {
+            display: block;
+            margin-bottom: 0.45rem;
+            color: #fecaca;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .critical-input {
+            width: 100%;
+            padding: 0.72rem 0.82rem;
+            border-radius: 8px;
+            border: 1px solid rgba(248, 113, 113, 0.35);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-color);
+            font-family: "Poppins", sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .critical-input::placeholder {
+            color: #fca5a5;
+            opacity: 0.7;
+        }
+
+        .critical-input:focus {
+            outline: none;
+            border-color: #f87171;
+            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.22);
+        }
+
+        .critical-check-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.62rem;
+            color: #fecaca;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .critical-check-row input {
+            margin-top: 0.2rem;
+            accent-color: #ef4444;
+        }
+
+        .critical-safety-hint {
+            margin: 0 0 0.8rem 0;
+            font-size: 0.85rem;
+            color: rgba(252, 165, 165, 0.9);
+        }
+
+        .critical-countdown {
+            margin: 0 0 0.8rem 0;
+            color: #fca5a5;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .btn-danger-solid {
+            width: 100%;
+            min-height: 48px;
+            padding: 0.9rem 1.1rem;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+        }
+
+        .btn-danger-solid:hover:not(:disabled) {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .btn-danger-solid:disabled {
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
+        .btn-danger-solid:focus-visible {
+            outline: 2px solid rgba(252, 165, 165, 0.8);
+            outline-offset: 2px;
+        }
+
+        .critical-delete-btn:not([hidden]) {
+            animation: fadeInDangerButton 0.24s ease;
+        }
+
+        @keyframes fadeInDangerButton {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .critical-feedback {
+            display: none;
+            margin-top: 0.9rem;
+            padding: 0.75rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.92rem;
+        }
+
+        .critical-feedback.success {
+            display: block;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            color: #6ee7b7;
+        }
+
+        .critical-feedback.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(248, 113, 113, 0.5);
+            color: #fecaca;
+        }
+
+        html:not(.dark-mode) .critical-settings {
+            border-color: rgba(220, 38, 38, 0.28);
+            background:
+                radial-gradient(circle at top right, rgba(239, 68, 68, 0.18), transparent 42%),
+                linear-gradient(140deg, rgba(255, 245, 245, 0.98), rgba(255, 255, 255, 0.98));
+            box-shadow: 0 0 0 1px rgba(252, 165, 165, 0.55), 0 10px 24px rgba(127, 29, 29, 0.08);
+        }
+
+        html:not(.dark-mode) .critical-subtitle {
+            color: #b91c1c;
+        }
+
+        html:not(.dark-mode) .critical-warning-icon {
+            border-color: rgba(220, 38, 38, 0.35);
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            box-shadow: none;
+        }
+
+        html:not(.dark-mode) .critical-warning-copy {
+            color: #7f1d1d;
+        }
+
+        html:not(.dark-mode) .btn-danger-outline {
+            border-color: rgba(220, 38, 38, 0.45);
+            background: rgba(254, 242, 242, 0.96);
+            color: #b91c1c;
+        }
+
+        html:not(.dark-mode) .btn-danger-outline:hover {
+            background: rgba(254, 226, 226, 0.95);
+            border-color: rgba(185, 28, 28, 0.65);
+        }
+
+        html:not(.dark-mode) .btn-danger-outline:focus-visible {
+            outline: 2px solid rgba(220, 38, 38, 0.55);
+        }
+
+        html:not(.dark-mode) .critical-delete-panel-inner {
+            border-color: rgba(248, 113, 113, 0.42);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        html:not(.dark-mode) .critical-form-label,
+        html:not(.dark-mode) .critical-check-row {
+            color: #7f1d1d;
+        }
+
+        html:not(.dark-mode) .critical-input {
+            border-color: rgba(220, 38, 38, 0.32);
+            background: #ffffff;
+            color: #111827;
+        }
+
+        html:not(.dark-mode) .critical-input::placeholder {
+            color: #9ca3af;
+            opacity: 1;
+        }
+
+        html:not(.dark-mode) .critical-input:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.14);
+        }
+
+        html:not(.dark-mode) .critical-safety-hint {
+            color: #991b1b;
+        }
+
+        html:not(.dark-mode) .critical-countdown {
+            color: #b91c1c;
+        }
+
+        html:not(.dark-mode) .critical-feedback.success {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.38);
+            color: #065f46;
+        }
+
+        html:not(.dark-mode) .critical-feedback.error {
+            background: rgba(254, 226, 226, 0.9);
+            border-color: rgba(220, 38, 38, 0.35);
+            color: #991b1b;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .profile-item {
+            padding: 1rem;
+            background-color: rgba(59, 130, 246, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-label {
+            font-size: 0.75rem;
+            color: var(--secondary-text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-value {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Prevent long, unbroken strings (like email addresses) from overflowing
+           their profile boxes — allow them to break/wrap as needed. */
+        .profile-value {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            hyphens: auto;
+            max-width: 100%;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: "Poppins", sans-serif;
+            font-size: 1rem;
+            line-height: 1.2;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-dark, var(--primary-color));
+            opacity: 0.9;
+        }
+
+        .getting-started-actions {
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .getting-started-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            min-height: 46px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .dashboard-ai-btn {
+            border-radius: 8px;
+        }
+
+        .dashboard-ai-btn.discuss-ai-btn {
+            margin-left: 0;
+            margin-top: 0;
+        }
+
+        .dashboard-ai-btn-icon {
+            width: 1rem;
+            height: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .dashboard-ai-btn-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--border-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: "Poppins", sans-serif;
+            font-size: 1rem;
+            line-height: 1.2;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-text-color);
+            opacity: 0.8;
+        }
+
+        .btn-edit {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .profile-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-section-header .section-title {
+            margin-bottom: 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary-text-color);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: "Poppins", sans-serif;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        select.form-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5rem 1.5rem;
+            padding-right: 2.5rem;
+        }
+
+        select.form-input option {
+            background-color: var(--card-background);
+            color: var(--text-color);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        .modal-message {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .modal-message.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            display: block;
+        }
+
+        .modal-message.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .profile-section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .btn-edit {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .form-actions button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding-top: calc(var(--header-height) + 20px);
+                padding-bottom: 2rem;
+            }
+
+            .dashboard-header {
+                margin-top: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .dashboard-header p {
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                margin-bottom: 1.5rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .profile-item {
+                padding: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .btn-primary {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .getting-started-actions {
+                flex-direction: column;
+            }
+
+            .getting-started-actions .getting-started-btn {
+                width: 100%;
+            }
+
+            .critical-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .critical-warning-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .btn-danger-outline {
+                width: 100%;
+            }
+
+            .critical-delete-panel.is-visible {
+                max-height: 700px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            main {
+                padding-top: calc(var(--header-height) + 15px);
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .stats-grid {
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.3rem;
+            }
+
+            .section {
+                padding: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .profile-label {
+                font-size: 0.7rem;
+            }
+
+            .profile-value {
+                font-size: 0.9rem;
+            }
+
+            .critical-delete-panel-inner {
+                padding: 1rem;
+            }
+
+            .critical-warning-copy {
+                font-size: 0.92rem;
+            }
+        }
+
+        /* Palette Styles */
+        .dashboard-palette {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            z-index: 100;
+            animation: fadeIn 0.2s ease;
+            text-align: left;
+        }
+
+        .dashboard-palette.show {
+            display: block;
+        }
+
+        .stat-card.palette-active {
+            z-index: 100;
+        }
+
+        .palette-loading {
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .palette-item {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .palette-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .palette-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: block;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .palette-item a:hover {
+            color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.05); /* Soft blue tint */
+        }
+
+        .palette-empty {
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            text-align: center;
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">RaushanSYNC Maths</a>
+            <div id="nav"></div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </button>
+</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="loading" id="loading">Loading your dashboard...</div>
+            <div class="loading page-error" id="errorMessage" style="display: none;"></div>
+
+            <div id="dashboardContent" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 id="welcomeTitle">Welcome!</h1>
+                    <p>Manage your learning journey here.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card accent-1" id="accountCard" style="cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent;" title="Click to view account status details">
+                        <div class="stat-label">Account Status ▾</div>
+                        <div class="stat-value" id="profileStatus" style="color: var(--primary-color);">✓</div>
+                        <div class="stat-meta" id="profileStatusMeta">Active</div>
+                        <div id="accountPalette" class="dashboard-palette">
+                            <div class="palette-item" id="accountMessage">Loading status...</div>
+                        </div>
+                    </div>
+                    <div class="stat-card accent-2" id="articlesCard" style="cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent;" title="Click to view recently completed articles">
+                        <div class="stat-label">Articles Completed ▾</div>
+                        <div class="stat-value" id="articlesCompletedCount">0</div>
+                        <div class="stat-meta" id="articlesCompletedMeta">Reading Sections + Video Lessons</div>
+                        <div id="articlesPalette" class="dashboard-palette">
+                            <div class="palette-loading">Loading recent articles...</div>
+                        </div>
+                    </div>
+                    <div class="stat-card accent-3" id="practicesCard" style="cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent;" title="Click to view recently completed practice">
+                        <div class="stat-label">Practice Completed ▾</div>
+                        <div class="stat-value" id="practicesCompletedCount">0</div>
+                        <div class="stat-meta" id="practicesCompletedMeta">Practice Questions + Labs</div>
+                        <div id="practicesPalette" class="dashboard-palette">
+                            <div class="palette-loading">Loading recent practice...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section" id="profileSection">
+                    <div class="profile-section-header">
+                        <h2 class="section-title">Your Profile</h2>
+                        <button class="btn-primary btn-edit" id="editProfileBtn">Edit Profile</button>
+                    </div>
+                    <div class="profile-grid">
+                        <div class="profile-item">
+                            <div class="profile-label">Full Name</div>
+                            <div class="profile-value" id="profileFullName">–</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Email</div>
+                            <div class="profile-value" id="profileEmail">–</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Phone</div>
+                            <div class="profile-value" id="profilePhone">–</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Education Level</div>
+                            <div class="profile-value" id="profileClass">–</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Getting Started</h2>
+                    <p style="color: var(--secondary-text-color); margin-bottom: 1.5rem;">Your dashboard is ready! Explore RaushanSYNC Maths content to begin your learning journey.</p>
+                    <div class="getting-started-actions">
+                        <a href="/" class="btn-primary getting-started-btn">Explore Learning Resources</a>
+                        <button type="button" id="openDashboardAI" class="btn-primary getting-started-btn discuss-ai-btn dashboard-ai-btn" aria-label="Ask RaushanSYNC AI">
+                            <span class="dashboard-ai-btn-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                    <path d="M12 3.75l1.26 2.91 2.99 1.26-2.99 1.26L12 12.09l-1.26-2.91-2.99-1.26 2.99-1.26L12 3.75Z" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M18.5 11.25l.72 1.67 1.66.72-1.66.72-.72 1.67-.72-1.67-1.66-.72 1.66-.72.72-1.67Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M6 13.5l.94 2.18 2.18.94-2.18.94L6 19.74l-.94-2.18-2.18-.94 2.18-.94L6 13.5Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </span>
+                            <span>Ask RaushanSYNC AI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <section class="section critical-settings" id="criticalSettingsSection" aria-labelledby="criticalSettingsTitle">
+                    <div class="critical-header">
+                        <div>
+                            <h2 class="section-title" id="criticalSettingsTitle">Critical Settings</h2>
+                            <p class="critical-subtitle">Danger zone. Permanent actions related to your account.</p>
+                        </div>
+                        <div class="critical-warning-icon" aria-hidden="true" title="Warning: irreversible action">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                <path d="M12 3.75 21 19.5H3L12 3.75Z" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 9V13.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                                <path d="M12 17.25H12.008" stroke="currentColor" stroke-width="1.95" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p class="critical-warning-copy">Deleting your account will permanently erase your profile, progress, saved data, and access.</p>
+
+                    <button type="button" id="criticalProceedBtn" class="btn-danger-outline" aria-expanded="false" aria-controls="criticalDeletePanel">
+                        Proceed to Critical Settings
+                    </button>
+
+                    <div id="criticalDeletePanel" class="critical-delete-panel" aria-hidden="true">
+                        <div class="critical-delete-panel-inner">
+                            <div class="critical-form-row">
+                                <label class="critical-form-label" for="criticalDeleteInput">Type DELETE to continue</label>
+                                <input
+                                    type="text"
+                                    id="criticalDeleteInput"
+                                    class="critical-input"
+                                    placeholder="DELETE"
+                                    inputmode="text"
+                                    autocapitalize="off"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    aria-describedby="criticalSafetyHint"
+                                >
+                            </div>
+
+                            <label class="critical-check-row" for="criticalDeleteCheckbox">
+                                <input type="checkbox" id="criticalDeleteCheckbox">
+                                <span>I understand this action is permanent and cannot be undone.</span>
+                            </label>
+
+                            <p id="criticalSafetyHint" class="critical-safety-hint">Complete both checks to start the security delay.</p>
+                            <p id="criticalCountdownText" class="critical-countdown" hidden aria-live="polite">Security delay: 15 seconds remaining</p>
+
+                            <button type="button" id="criticalDeleteBtn" class="btn-danger-solid critical-delete-btn" hidden disabled aria-disabled="true">
+                                Delete My Account Permanently
+                            </button>
+
+                            <div id="criticalFeedback" class="critical-feedback" role="status" aria-live="polite"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+            </div>
+            <div id="modalMessage" class="modal-message"></div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="fullNameInput" class="form-label">Full Name</label>
+                    <input type="text" id="fullNameInput" class="form-input" placeholder="Enter your full name" maxlength="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="emailInput" class="form-label">Email</label>
+                    <input type="email" id="emailInput" class="form-input" placeholder="Enter your email" maxlength="255" required>
+                </div>
+                    <div class="form-group">
+                        <label for="phoneInput" class="form-label">Phone</label>
+                        <input type="tel" id="phoneInput" class="form-input" placeholder="Enter your phone number" maxlength="20" inputmode="tel">
+                    </div>
+                <div class="form-group">
+                    <label for="classInput" class="form-label">Education Level</label>
+                    <select id="classInput" class="form-input" required>
+                        <option value="">Select your education level</option>
+                        <option value="class 06">Class 06</option>
+                        <option value="class 07">Class 07</option>
+                        <option value="class 08">Class 08</option>
+                        <option value="class 09">Class 09</option>
+                        <option value="class 10">Class 10</option>
+                        <option value="class 11">Class 11</option>
+                        <option value="class 12">Class 12</option>
+                        <option value="undergraduate">Undergraduate</option>
+                        <option value="postgraduate">Postgraduate</option>
+                        <option value="phd">PhD</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveBtn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="ai-chat-modal" class="ai-chat-modal" hidden aria-hidden="true" role="dialog" aria-modal="true"
+        aria-labelledby="ai-chat-title">
+        <div class="ai-chat-overlay" data-ai-chat-close></div>
+        <section class="ai-chat-panel">
+            <header class="ai-chat-header">
+                <div class="ai-chat-header-copy">
+                    <h2 id="ai-chat-title">RaushanSYNC AI Assistant</h2>
+                    <p id="ai-chat-subtitle" class="ai-chat-subtitle">Ask academic or non-academic questions anytime.</p>
+                </div>
+                <button id="ai-chat-close" class="ai-chat-close" type="button" aria-label="Close AI chat">×</button>
+            </header>
+            <div id="ai-chat-context" class="ai-chat-context" aria-live="polite"></div>
+            <div id="ai-chat-history" class="ai-chat-history" aria-live="polite"></div>
+            <form id="ai-chat-form" class="ai-chat-input-row">
+                <label for="ai-chat-input" class="ai-chat-label">Ask RaushanSYNC AI</label>
+                <textarea id="ai-chat-input" rows="2" placeholder="Ask anything about studies, exams, career, motivation, or productivity..."></textarea>
+                <button id="ai-chat-send" type="submit">Send</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Load dependencies first (Supabase must come before auth-config.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="/assets/js/auth-config.js"></script>
+    <script src="/assets/js/progress-tracker.js"></script>
+    <script src="/assets/js/tick-manager.js"></script>
+    
+    <!-- Main app script (depends on auth-config.js) -->
+    <script src="/assets/js/script.js"></script>
+    
+    <!-- Auth guard must be last (for protected pages) -->
+    <script src="/assets/js/auth-guard.js"></script>
+    <script src="/ai-chat.js"></script>
+
+    <script>
+        let currentUser = null;
+        let currentProfile = null;
+        let activityTracker = {
+            // Deprecated - kept for reference but no longer used
+            // See Step 3: Activity tracking and learned_hours removed
+        };
+
+        const DELETE_ACCOUNT_ENDPOINT_CANDIDATES = [
+            "/api/account/delete",
+            "https://quiz-ai-tutor.raushanguptaicloud.workers.dev/api/account/delete"
+        ];
+
+        const criticalSettingsState = {
+            showPanel: false,
+            confirmText: "",
+            checked: false,
+            countdown: 15,
+            canDelete: false,
+            loading: false,
+            error: "",
+            success: "",
+            timerId: null
+        };
+
+        // Safety timeout: if dashboard doesn't initialize within 15 seconds, show error
+        const dashboardInitTimeout = setTimeout(() => {
+            if (document.getElementById("loading").style.display !== "none") {
+                showError("Dashboard is taking too long to load. Please refresh the page.");
+            }
+        }, 15000);
+
+        // Clear timeout once dashboard initializes
+        async function initializeDashboardWithTimeout() {
+            try {
+                await initializeDashboard();
+            } finally {
+                clearTimeout(dashboardInitTimeout);
+            }
+        }
+
+        // Modal handlers - set up after DOM is ready
+        let modal, editBtn, closeBtn, cancelBtn, editForm, modalMessage, dashboardAIBtn;
+        let criticalSettingsSection;
+        let criticalProceedBtn;
+        let criticalDeletePanel;
+        let criticalDeleteInput;
+        let criticalDeleteCheckbox;
+        let criticalCountdownText;
+        let criticalDeleteBtn;
+        let criticalSafetyHint;
+        let criticalFeedback;
+
+        function setupModalHandlers() {
+            modal = document.getElementById("editProfileModal");
+            editBtn = document.getElementById("editProfileBtn");
+            closeBtn = document.getElementById("modalClose");
+            cancelBtn = document.getElementById("cancelBtn");
+            editForm = document.getElementById("editProfileForm");
+            modalMessage = document.getElementById("modalMessage");
+            dashboardAIBtn = document.getElementById("openDashboardAI");
+
+            if (editBtn) editBtn.addEventListener("click", openEditModal);
+            if (closeBtn) closeBtn.addEventListener("click", closeEditModal);
+            if (cancelBtn) cancelBtn.addEventListener("click", closeEditModal);
+            if (editForm) editForm.addEventListener("submit", handleEditFormSubmit);
+            if (dashboardAIBtn) dashboardAIBtn.addEventListener("click", openDashboardAIChat);
+
+            // Close modal when clicking outside of it
+            if (modal) {
+                window.addEventListener("click", (event) => {
+                    if (event.target === modal) {
+                        closeEditModal();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setupModalHandlers();
+            setupCriticalSettingsHandlers();
+            initializeDashboardWithTimeout();
+        });
+
+        function setupCriticalSettingsHandlers() {
+            criticalSettingsSection = document.getElementById("criticalSettingsSection");
+            criticalProceedBtn = document.getElementById("criticalProceedBtn");
+            criticalDeletePanel = document.getElementById("criticalDeletePanel");
+            criticalDeleteInput = document.getElementById("criticalDeleteInput");
+            criticalDeleteCheckbox = document.getElementById("criticalDeleteCheckbox");
+            criticalCountdownText = document.getElementById("criticalCountdownText");
+            criticalDeleteBtn = document.getElementById("criticalDeleteBtn");
+            criticalSafetyHint = document.getElementById("criticalSafetyHint");
+            criticalFeedback = document.getElementById("criticalFeedback");
+
+            if (
+                !criticalSettingsSection ||
+                !criticalProceedBtn ||
+                !criticalDeletePanel ||
+                !criticalDeleteInput ||
+                !criticalDeleteCheckbox ||
+                !criticalCountdownText ||
+                !criticalDeleteBtn ||
+                !criticalSafetyHint ||
+                !criticalFeedback
+            ) {
+                return;
+            }
+
+            criticalProceedBtn.addEventListener("click", handleCriticalProceedClick);
+            criticalDeleteInput.addEventListener("input", handleCriticalConfirmInput);
+            criticalDeleteCheckbox.addEventListener("change", handleCriticalCheckboxChange);
+            criticalDeleteBtn.addEventListener("click", handleCriticalDeleteAction);
+            window.addEventListener("beforeunload", stopCriticalCountdownTimer);
+
+            renderCriticalSettingsState();
+        }
+
+        function isCriticalChecklistComplete() {
+            return criticalSettingsState.confirmText === "DELETE" && criticalSettingsState.checked;
+        }
+
+        function stopCriticalCountdownTimer() {
+            if (criticalSettingsState.timerId !== null) {
+                clearInterval(criticalSettingsState.timerId);
+                criticalSettingsState.timerId = null;
+            }
+        }
+
+        function resetCriticalCountdownState() {
+            stopCriticalCountdownTimer();
+            criticalSettingsState.countdown = 15;
+            criticalSettingsState.canDelete = false;
+        }
+
+        function startCriticalCountdownTimer() {
+            resetCriticalCountdownState();
+
+            criticalSettingsState.timerId = setInterval(() => {
+                if (
+                    !criticalSettingsState.showPanel ||
+                    !isCriticalChecklistComplete() ||
+                    criticalSettingsState.loading
+                ) {
+                    resetCriticalCountdownState();
+                    renderCriticalSettingsState();
+                    return;
+                }
+
+                if (criticalSettingsState.countdown <= 1) {
+                    criticalSettingsState.countdown = 0;
+                    criticalSettingsState.canDelete = true;
+                    stopCriticalCountdownTimer();
+                    renderCriticalSettingsState();
+                    return;
+                }
+
+                criticalSettingsState.countdown -= 1;
+                renderCriticalSettingsState();
+            }, 1000);
+        }
+
+        function synchronizeCriticalCountdown() {
+            const checklistComplete = isCriticalChecklistComplete();
+
+            if (!criticalSettingsState.showPanel || !checklistComplete) {
+                resetCriticalCountdownState();
+                return;
+            }
+
+            if (criticalSettingsState.loading || criticalSettingsState.canDelete) {
+                return;
+            }
+
+            if (criticalSettingsState.timerId === null) {
+                startCriticalCountdownTimer();
+            }
+        }
+
+        function renderCriticalSettingsState() {
+            if (!criticalSettingsSection) {
+                return;
+            }
+
+            const checklistComplete = isCriticalChecklistComplete();
+            const showCountdown =
+                criticalSettingsState.showPanel &&
+                checklistComplete &&
+                !criticalSettingsState.canDelete &&
+                !criticalSettingsState.loading;
+            const showDeleteButton = criticalSettingsState.showPanel && criticalSettingsState.canDelete;
+            const deleteButtonDisabled = !criticalSettingsState.canDelete || criticalSettingsState.loading;
+            const showHint = criticalSettingsState.showPanel && !checklistComplete && !criticalSettingsState.loading;
+
+            criticalDeletePanel.classList.toggle("is-visible", criticalSettingsState.showPanel);
+            criticalDeletePanel.setAttribute("aria-hidden", criticalSettingsState.showPanel ? "false" : "true");
+
+            criticalProceedBtn.setAttribute("aria-expanded", criticalSettingsState.showPanel ? "true" : "false");
+            criticalProceedBtn.disabled = criticalSettingsState.loading;
+            criticalProceedBtn.setAttribute("aria-disabled", String(Boolean(criticalProceedBtn.disabled)));
+
+            criticalDeleteInput.disabled = criticalSettingsState.loading;
+            criticalDeleteCheckbox.disabled = criticalSettingsState.loading;
+
+            criticalSafetyHint.hidden = !showHint;
+
+            criticalCountdownText.hidden = !showCountdown;
+            if (showCountdown) {
+                criticalCountdownText.textContent = "Security delay: " + criticalSettingsState.countdown + " seconds remaining";
+            }
+
+            criticalDeleteBtn.hidden = !showDeleteButton;
+            criticalDeleteBtn.disabled = deleteButtonDisabled;
+            criticalDeleteBtn.setAttribute("aria-disabled", String(deleteButtonDisabled));
+            criticalDeleteBtn.textContent = criticalSettingsState.loading
+                ? "Deleting Account..."
+                : "Delete My Account Permanently";
+
+            criticalFeedback.textContent = "";
+            criticalFeedback.className = "critical-feedback";
+            if (criticalSettingsState.error) {
+                criticalFeedback.textContent = criticalSettingsState.error;
+                criticalFeedback.classList.add("error");
+            } else if (criticalSettingsState.success) {
+                criticalFeedback.textContent = criticalSettingsState.success;
+                criticalFeedback.classList.add("success");
+            }
+        }
+
+        function handleCriticalProceedClick() {
+            if (criticalSettingsState.loading) {
+                return;
+            }
+
+            criticalSettingsState.showPanel = true;
+            criticalSettingsState.error = "";
+            criticalSettingsState.success = "";
+            synchronizeCriticalCountdown();
+            renderCriticalSettingsState();
+
+            window.setTimeout(() => {
+                criticalDeletePanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                criticalDeleteInput.focus();
+            }, 60);
+        }
+
+        function handleCriticalConfirmInput(event) {
+            criticalSettingsState.confirmText = event.target.value;
+            criticalSettingsState.error = "";
+            criticalSettingsState.success = "";
+            synchronizeCriticalCountdown();
+            renderCriticalSettingsState();
+        }
+
+        function handleCriticalCheckboxChange(event) {
+            criticalSettingsState.checked = Boolean(event.target.checked);
+            criticalSettingsState.error = "";
+            criticalSettingsState.success = "";
+            synchronizeCriticalCountdown();
+            renderCriticalSettingsState();
+        }
+
+        function getDeleteAccountEndpoints() {
+            const endpoints = [];
+
+            if (typeof window.__ACCOUNT_DELETE_ENDPOINT__ === "string") {
+                const customEndpoint = window.__ACCOUNT_DELETE_ENDPOINT__.trim();
+                if (customEndpoint) {
+                    endpoints.push(customEndpoint);
+                }
+            }
+
+            DELETE_ACCOUNT_ENDPOINT_CANDIDATES.forEach((endpoint) => {
+                if (typeof endpoint !== "string") return;
+                const normalized = endpoint.trim();
+                if (normalized && !endpoints.includes(normalized)) {
+                    endpoints.push(normalized);
+                }
+            });
+
+            return endpoints;
+        }
+
+        async function getCurrentAccessToken() {
+            try {
+                if (typeof window.getCurrentSession === "function") {
+                    const session = await window.getCurrentSession();
+                    if (session && typeof session.access_token === "string" && session.access_token.trim()) {
+                        return session.access_token.trim();
+                    }
+                }
+
+                if (window.supabaseClient?.auth?.getSession) {
+                    const sessionResult = await window.supabaseClient.auth.getSession();
+                    const token = sessionResult?.data?.session?.access_token;
+                    if (typeof token === "string" && token.trim()) {
+                        return token.trim();
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch current access token:", error);
+            }
+
+            return "";
+        }
+
+        async function sendDeleteAccountRequest(accessToken) {
+            const endpoints = getDeleteAccountEndpoints();
+            let lastErrorMessage = "Unable to delete account. Try again.";
+
+            for (let index = 0; index < endpoints.length; index += 1) {
+                const endpoint = endpoints[index];
+                let response;
+
+                try {
+                    response = await fetch(endpoint, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + accessToken
+                        }
+                    });
+                } catch (networkError) {
+                    lastErrorMessage = "Unable to reach account service.";
+                    if (index < endpoints.length - 1) {
+                        continue;
+                    }
+
+                    return {
+                        success: false,
+                        message: lastErrorMessage
+                    };
+                }
+
+                let payload = {};
+                try {
+                    payload = await response.json();
+                } catch (parseError) {
+                    payload = {};
+                }
+
+                const shouldTryFallbackEndpoint =
+                    endpoint.startsWith("/") &&
+                    index < endpoints.length - 1 &&
+                    (response.status === 404 || response.status === 405 || response.status === 501 || response.status === 403);
+
+                if (shouldTryFallbackEndpoint) {
+                    continue;
+                }
+
+                if (!response.ok) {
+                    const errorMessage =
+                        typeof payload?.message === "string" && payload.message.trim()
+                            ? payload.message.trim()
+                            : typeof payload?.error === "string" && payload.error.trim()
+                                ? payload.error.trim()
+                                : "Unable to delete account. Try again.";
+
+                    return {
+                        success: false,
+                        message: errorMessage
+                    };
+                }
+
+                return {
+                    success: Boolean(payload?.success),
+                    message: typeof payload?.message === "string" ? payload.message : ""
+                };
+            }
+
+            return {
+                success: false,
+                message: lastErrorMessage
+            };
+        }
+
+        function clearSupabaseBrowserAuthStorage() {
+            const authStorageKeyPattern = /^(supabase\.auth\.token|sb-.*-auth-token(?:-code-verifier)?)$/;
+            const storages = [];
+
+            try {
+                if (window.localStorage) {
+                    storages.push(window.localStorage);
+                }
+            } catch (localStorageError) {
+                console.error("Unable to access localStorage for auth cleanup:", localStorageError);
+            }
+
+            try {
+                if (window.sessionStorage) {
+                    storages.push(window.sessionStorage);
+                }
+            } catch (sessionStorageError) {
+                console.error("Unable to access sessionStorage for auth cleanup:", sessionStorageError);
+            }
+
+            storages.forEach((storage) => {
+                for (let index = storage.length - 1; index >= 0; index -= 1) {
+                    const key = storage.key(index);
+                    if (typeof key === "string" && authStorageKeyPattern.test(key)) {
+                        storage.removeItem(key);
+                    }
+                }
+            });
+        }
+
+        async function clearClientAuthAfterAccountDelete() {
+            if (window.supabaseClient?.auth?.signOut) {
+                try {
+                    await window.supabaseClient.auth.signOut({ scope: "local" });
+                } catch (localSignOutError) {
+                    console.error("Local sign-out after account deletion failed:", localSignOutError);
+                }
+
+                try {
+                    await window.supabaseClient.auth.signOut();
+                } catch (signOutError) {
+                    console.error("Account deleted but sign-out failed:", signOutError);
+                }
+            }
+
+            clearSupabaseBrowserAuthStorage();
+
+            try {
+                if (typeof window.clearSensitiveCaches === "function") {
+                    await window.clearSensitiveCaches();
+                }
+            } catch (cacheError) {
+                console.error("Failed clearing cache after account deletion:", cacheError);
+            }
+
+            window.authState = {
+                initialized: true,
+                session: null
+            };
+
+            window.dispatchEvent(
+                new CustomEvent("rs:auth-state-change", {
+                    detail: {
+                        session: null
+                    }
+                })
+            );
+
+            document.dispatchEvent(new CustomEvent("user-logout"));
+        }
+
+        async function handleCriticalDeleteAction() {
+            if (!criticalSettingsState.canDelete || criticalSettingsState.loading) {
+                return;
+            }
+
+            const shouldDelete = window.confirm("Are you absolutely sure? This will permanently delete your account and cannot be undone.");
+            if (!shouldDelete) {
+                return;
+            }
+
+            criticalSettingsState.loading = true;
+            criticalSettingsState.error = "";
+            criticalSettingsState.success = "";
+            renderCriticalSettingsState();
+
+            try {
+                const accessToken = await getCurrentAccessToken();
+                if (!accessToken) {
+                    throw new Error("Your session has expired. Please sign in again.");
+                }
+
+                const response = await sendDeleteAccountRequest(accessToken);
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to delete account. Please try again.");
+                }
+
+                stopCriticalCountdownTimer();
+                criticalSettingsState.success = "Account deleted successfully";
+                renderCriticalSettingsState();
+
+                window.alert("Account deleted successfully");
+
+                currentUser = null;
+                currentProfile = null;
+
+                await clearClientAuthAfterAccountDelete();
+
+                window.setTimeout(() => {
+                    if (typeof window.redirectToPath === "function") {
+                        window.redirectToPath("/login", {
+                            replace: true,
+                            allowAuthPages: true,
+                            fallback: "/"
+                        });
+                        return;
+                    }
+
+                    window.location.replace("/login");
+                }, 2000);
+            } catch (error) {
+                console.error("Failed to delete account:", error);
+                criticalSettingsState.loading = false;
+                const readableError =
+                    error instanceof Error && typeof error.message === "string" && error.message.trim()
+                        ? error.message.trim()
+                        : "Unable to delete account. Please try again.";
+                criticalSettingsState.error = readableError;
+                criticalSettingsState.success = "";
+                synchronizeCriticalCountdown();
+                renderCriticalSettingsState();
+            }
+        }
+
+        function handleActivity() {
+            // Activity tracking removed in Step 3 - Learned hours tracking deprecated
+        }
+
+        function getLearnedHours() {
+            let totalMs = activityTracker.totalMilliseconds;
+            if (activityTracker.isActive && activityTracker.sessionStartTime) {
+                totalMs += Date.now() - activityTracker.sessionStartTime;
+            }
+            return totalMs / (1000 * 60 * 60); // Convert milliseconds to hours
+        }
+
+        function formatLearnedHours(hours) {
+            const wholeHours = Math.floor(hours);
+            const minutes = Math.floor((hours % 1) * 60);
+            if (wholeHours === 0) {
+                return `${minutes}m`;
+            }
+            return `${wholeHours}h ${minutes}m`;
+        }
+
+        function updateLearnedHoursDisplay() {
+            const hours = getLearnedHours();
+            const formattedHours = formatLearnedHours(hours);
+            document.getElementById("learnedHours").textContent = formattedHours;
+        }
+
+        async function syncLearnedHours() {
+            if (!currentUser || !window.supabaseClient) return;
+
+            try {
+                // Include current active session in the total before syncing
+                let totalMsToSync = activityTracker.totalMilliseconds;
+                if (activityTracker.isActive && activityTracker.sessionStartTime) {
+                    totalMsToSync += Date.now() - activityTracker.sessionStartTime;
+                }
+                
+                const { data, error } = await window.supabaseClient.auth.updateUser({
+                    data: {
+                        learned_milliseconds: totalMsToSync
+                    }
+                });
+                
+                if (error) {
+                    console.error("Error syncing learned hours:", error);
+                    return;
+                }
+                
+                // Update the local currentUser object with the synced value
+                if (data && data.user) {
+                    currentUser = data.user;
+                    console.log("Learned hours synced successfully:", totalMsToSync);
+                }
+            } catch (error) {
+                console.error("Error syncing learned hours:", error);
+            }
+        }
+
+        function startActivityTracking() {
+            // Update display every second
+            if (activityTracker.updateInterval) clearInterval(activityTracker.updateInterval);
+            activityTracker.updateInterval = setInterval(() => {
+                updateLearnedHoursDisplay();
+            }, 1000);
+
+            // Sync with Supabase every 30 seconds
+            if (activityTracker.syncInterval) clearInterval(activityTracker.syncInterval);
+            activityTracker.syncInterval = setInterval(() => {
+                syncLearnedHours();
+            }, 30 * 1000);
+
+            // Trigger initial activity detection
+            activityTracker.lastActivityTime = Date.now();
+            updateLearnedHoursDisplay();
+        }
+
+        // REPLACED BY PROGRESS STATS (Step 3)
+        async function loadProgressStats() {
+            try {
+                if (!window.supabaseClient || !currentUser) {
+                    return;
+                }
+
+                // Query articles completed
+                const { data: articleProgress, error: articleError } = await window.supabaseClient
+                    .from('progress')
+                    .select('id')
+                    .eq('user_id', currentUser.id)
+                    .eq('item_type', 'article')
+                    .eq('completed', true);
+
+                // Query practices completed
+                const { data: practiceProgress, error: practiceError } = await window.supabaseClient
+                    .from('progress')
+                    .select('id')
+                    .eq('user_id', currentUser.id)
+                    .eq('item_type', 'practice')
+                    .eq('completed', true);
+
+                const articlesCompleted = !articleError ? (articleProgress?.length || 0) : 0;
+                const practicesCompleted = !practiceError ? (practiceProgress?.length || 0) : 0;
+
+                // STEP 4: Update displays with real progress data
+                // Display articles completed
+                const articlesEl = document.getElementById("articlesCompletedCount");
+                if (articlesEl) {
+                    articlesEl.textContent = articlesCompleted;
+                    articlesEl.classList.add('progress-stats-updated');
+                }
+
+                // Display practices completed
+                const practicesEl = document.getElementById("practicesCompletedCount");
+                if (practicesEl) {
+                    practicesEl.textContent = practicesCompleted;
+                    practicesEl.classList.add('progress-stats-updated');
+                }
+
+                // Keep old IDs for backward compatibility if needed
+                const learnedHoursEl = document.getElementById("learnedHours");
+                if (learnedHoursEl) {
+                    learnedHoursEl.textContent = articlesCompleted;
+                }
+                const learnedMetaEl = document.getElementById("learnedMeta");
+                if (learnedMetaEl) {
+                    learnedMetaEl.textContent = "Articles Completed";
+                }
+
+            } catch (error) {
+                console.error("Error loading progress stats:", error);
+            }
+        }
+
+        function formatPathToTitle(path) {
+            if (!path) return 'Unknown Item';
+            let text = path.replace(/\/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
+            let parts = text.split('/').filter(p => !['notes', 'practice', 'practice-advanced', 'practice-solution'].includes(p) && p !== '');
+            if (parts.length === 0) return 'Content';
+            return parts.map(p => {
+                return p.replace(/([a-zA-Z])(\d+)/g, '$1 $2')
+                    .replace(/-/g, ' ')
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+            }).join(' - ');
+        }
+
+        async function fetchRecentProgress(itemType, limit = 3) {
+            if (!window.supabaseClient || !currentUser) return [];
+            try {
+                const site = window.getCurrentSite ? window.getCurrentSite() : window.location.hostname;
+                const { data, error } = await window.supabaseClient
+                    .from('progress')
+                    .select('item_path, updated_at')
+                    .eq('user_id', currentUser.id)
+                    .eq('site', site)
+                    .eq('item_type', itemType)
+                    .eq('completed', true)
+                    .order('updated_at', { ascending: false })
+                    .limit(limit);
+
+                if (error) throw error;
+                return data || [];
+            } catch (err) {
+                console.error("Error fetching recent " + itemType + ":", err);
+                return [];
+            }
+        }
+        
+        function setupProgressPalettes() {
+            const setups = [
+                { cardId: 'accountCard', paletteId: 'accountPalette', type: 'account' },
+                { cardId: 'articlesCard', paletteId: 'articlesPalette', type: 'article' },
+                { cardId: 'practicesCard', paletteId: 'practicesPalette', type: 'practice' }
+            ];
+
+            setups.forEach(setup => {
+                const card = document.getElementById(setup.cardId);
+                const palette = document.getElementById(setup.paletteId);
+                if (!card || !palette) return;
+
+                let loaded = false;
+
+                card.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const isShowing = palette.classList.contains('show');
+
+                    // Close all palettes and remove active states
+                    document.querySelectorAll('.dashboard-palette.show').forEach(p => p.classList.remove('show'));
+                    document.querySelectorAll('.stat-card.palette-active').forEach(c => c.classList.remove('palette-active'));
+
+                    if (isShowing) return;
+
+                    palette.classList.add('show');
+                    card.classList.add('palette-active');
+
+                    if (!loaded && setup.type !== 'account') {
+                        const items = await fetchRecentProgress(setup.type);
+                        if (items.length === 0) {
+                            palette.innerHTML = '<div class="palette-empty">No recent activity.</div>';
+                        } else {
+                            palette.innerHTML = items.map(item => {
+                                const title = formatPathToTitle(item.item_path);
+                                return `<div class="palette-item"><a href="${item.item_path}">${title}</a></div>`;
+                            }).join('');
+                        }
+                        loaded = true;
+                    }
+                });
+
+                palette.addEventListener('click', e => e.stopPropagation());
+            });
+
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.dashboard-palette.show').forEach(p => p.classList.remove('show'));
+                document.querySelectorAll('.stat-card.palette-active').forEach(c => c.classList.remove('palette-active'));
+            });
+        }
+
+        async function initializeDashboard() {
+            if (!window.supabaseClient) {
+                showError("Authentication is unavailable. Please check Supabase configuration.");
+                return;
+            }
+
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                
+                if (!session) {
+                    window.location.replace("/login");
+                    return;
+                }
+
+                currentUser = session.user;
+
+                // Try to load extended profile (profiles table). Prefer values from profiles when available.
+                try {
+                    currentProfile = await window.getUserProfile();
+                } catch (err) {
+                    console.error('Failed to fetch profile:', err);
+                    currentProfile = null;
+                }
+
+                const fullName = (currentProfile?.full_name) || currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "User";
+                const email = currentUser.email || "–";
+                const educationLevel = currentProfile?.education_level || currentUser.user_metadata?.education_level || "Not specified";
+                const phone = currentProfile?.phone || currentUser.user_metadata?.phone || "–";
+
+                document.getElementById("welcomeTitle").textContent = "Welcome back, " + fullName + "!";
+                document.getElementById("profileFullName").textContent = fullName;
+                document.getElementById("profileEmail").textContent = email;
+                document.getElementById("profileClass").textContent = educationLevel;
+                const profilePhoneEl = document.getElementById("profilePhone");
+                if (profilePhoneEl) profilePhoneEl.textContent = phone;
+
+                const shouldOpenProfileEditor = new URLSearchParams(window.location.search).get("edit-profile") === "1" || window.location.hash === "#profileSection";
+                if (shouldOpenProfileEditor) {
+                    setTimeout(() => openEditModal(), 0);
+                }
+
+                // Load and display progress stats
+                await loadProgressStats();
+                
+                // Initialize palettes for completed articles and practices
+                setupProgressPalettes();
+                
+                // Update profile status
+                updateProfileStatus();
+                
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("dashboardContent").style.display = "block";
+                document.documentElement.classList.remove("auth-pending");
+
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showError("Failed to load dashboard. Please refresh the page.");
+            }
+        }
+
+        function updateProfileStatus() {
+            if (!currentUser) return;
+            const fullName = currentProfile?.full_name || currentUser.user_metadata?.full_name || "";        
+            const email = currentUser.email || "";
+            const educationLevel = currentProfile?.education_level || currentUser.user_metadata?.education_level || "";
+            const phone = currentProfile?.phone || currentUser.user_metadata?.phone || "";
+
+            // Check if all profile fields are filled
+            const isComplete = Boolean(fullName && email && educationLevel && phone);    
+
+            const statusElement = document.getElementById("profileStatus");     
+            const statusMetaElement = document.getElementById("profileStatusMeta");
+
+            // If neither element exists on this page, nothing to update        
+            if (!statusElement && !statusMetaElement) return;
+
+            if (statusElement) {
+                statusElement.textContent = isComplete ? "✓" : "✗";
+                statusElement.style.color = isComplete ? "#10b981" : "#ef4444"; 
+            }
+
+            if (statusMetaElement) {
+                statusMetaElement.textContent = isComplete ? "Complete" : "Incomplete";
+                statusMetaElement.style.color = isComplete ? "#10b981" : "#ef4444";
+            }
+            
+            const accountMessage = document.getElementById("accountMessage");
+            if (accountMessage) {
+                if (isComplete) {
+                    accountMessage.innerHTML = '<span style="color: #10b981; font-weight: 500;">No action needed! Your profile is complete.</span>';
+                } else {
+                    accountMessage.innerHTML = '<span style="color: #ef4444; font-weight: 500;">Your profile is incomplete. Click "Edit Profile" below to complete it.</span>';
+                }
+            }
+        }
+
+        function showError(message) {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("dashboardContent").style.display = "none";
+            const errorDiv = document.getElementById("errorMessage");
+            errorDiv.textContent = message;
+            errorDiv.style.display = "block";
+            document.documentElement.classList.remove("auth-pending");
+        }
+
+        function openDashboardAIChat() {
+            if (typeof window.initAIChat !== "function") {
+                alert("AI assistant is not available right now. Please refresh and try again.");
+                return;
+            }
+
+            const learnerName = (currentProfile?.full_name) || currentUser?.user_metadata?.full_name || "Student";
+
+            window.initAIChat({
+                practiceTitle: "Student Support",
+                questionText: "General student guidance and support",
+                userAnswer: "Student: " + learnerName,
+                correctAnswer: "Not provided",
+                explanation: "Covers academics, exam prep, career guidance, motivation, time management, college issues, and productivity.",
+                pageUrl: window.location.href
+            }, {
+                mode: "student-support",
+                title: "RaushanSYNC AI Assistant",
+                subtitle: "Ask academic or non-academic questions anytime.",
+                assistantGreeting: "Hi! I am RaushanSYNC AI Assistant. I can help with academic doubts, study planning, exam preparation, career guidance, motivation, time management, college issues, personal productivity, and general student support.",
+                inputLabel: "Ask RaushanSYNC AI",
+                inputPlaceholder: "Ask anything about studies, exams, career, motivation, college life, or productivity...",
+                showContext: false
+            });
+        }
+
+        function openEditModal() {
+            if (!currentUser) return;
+
+            // Populate form with current values
+            document.getElementById("fullNameInput").value = currentProfile?.full_name || currentUser.user_metadata?.full_name || "";
+            document.getElementById("emailInput").value = currentUser.email || "";
+            document.getElementById("phoneInput").value = currentProfile?.phone || currentUser.user_metadata?.phone || "";
+            document.getElementById("classInput").value = currentProfile?.education_level || currentUser.user_metadata?.education_level || "";
+
+            // Clear previous messages
+            clearModalMessage();
+            modal.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeEditModal() {
+            modal.classList.remove("show");
+            document.body.style.overflow = "auto";
+            editForm.reset();
+            clearModalMessage();
+        }
+
+        function showModalMessage(message, type) {
+            modalMessage.textContent = message;
+            modalMessage.className = "modal-message " + type;
+        }
+
+        function clearModalMessage() {
+            modalMessage.textContent = "";
+            modalMessage.className = "modal-message";
+        }
+
+        async function handleEditFormSubmit(e) {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById("saveBtn");
+            const originalText = saveBtn.textContent;
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+            try {
+                const fullName = document.getElementById("fullNameInput").value.trim();
+                const email = document.getElementById("emailInput").value.trim();
+                const phone = document.getElementById("phoneInput").value.trim();
+                const educationLevel = document.getElementById("classInput").value.trim();
+
+                // Validation
+                if (!fullName) {
+                    showModalMessage("Please enter your full name", "error");
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                    return;
+                }
+
+                if (!email) {
+                    showModalMessage("Please enter your email", "error");
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                    return;
+                }
+
+                if (!educationLevel) {
+                    showModalMessage("Please select your education level", "error");
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                    return;
+                }
+
+                if (phone && phone.length > 20) {
+                    showModalMessage("Phone number is too long", "error");
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                    return;
+                }
+
+                // If email has changed, update it in auth
+                if (email !== currentUser.email) {
+                    const { error: emailError } = await window.supabaseClient.auth.updateUser({ email: email });
+                    if (emailError) {
+                        throw emailError;
+                    }
+                }
+
+                // Update user metadata (include phone)
+                const { error: metadataError } = await window.supabaseClient.auth.updateUser({
+                    data: {
+                        full_name: fullName,
+                        education_level: educationLevel,
+                        phone: phone || null
+                    }
+                });
+
+                if (metadataError) {
+                    throw metadataError;
+                }
+
+                // Also sync to the profiles table to keep server-side profile row up-to-date
+                try {
+                    const synced = await window.syncUserProfile({ explicitProfile: { full_name: fullName, education_level: educationLevel, phone: phone || null } });
+                    if (synced) currentProfile = synced;
+                } catch (syncErr) {
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.error('Profile sync failed:', syncErr);
+                    }
+                }
+
+                // Update the current user object
+                currentUser.user_metadata.full_name = fullName;
+                currentUser.user_metadata.education_level = educationLevel;
+                currentUser.user_metadata.phone = phone || null;
+                if (email !== currentUser.email) {
+                    currentUser.email = email;
+                }
+
+                // Update the display
+                document.getElementById("welcomeTitle").textContent = "Welcome back, " + fullName + "!";
+                document.getElementById("profileFullName").textContent = fullName;
+                document.getElementById("profileEmail").textContent = email;
+                document.getElementById("profileClass").textContent = educationLevel;
+                const profilePhoneEl = document.getElementById("profilePhone");
+                if (profilePhoneEl) profilePhoneEl.textContent = phone || "–";
+
+                // Update profile status
+                updateProfileStatus();
+
+                showModalMessage("Profile updated successfully!", "success");
+                setTimeout(() => {
+                    closeEditModal();
+                }, 1500);
+
+            } catch (error) {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.error("Update error:", error);
+                }
+                showModalMessage(error.message || "Failed to update profile. Please try again.", "error");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+            }
+        }
+    </script>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered successfully'))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        }
+    </script>
+</body>
+</html>
+

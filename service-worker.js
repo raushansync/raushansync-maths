@@ -1,32 +1,100 @@
 /* RaushanSYNC Maths PWA Service Worker */
-const CACHE_VERSION = 'maths-v1.0.3';
+const CACHE_VERSION = 'maths-v1.1.1';
 const CORE_CACHE = 'rs-core-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'rs-runtime-' + CACHE_VERSION;
-const OFFLINE_URL = '/offline.html';
+const OFFLINE_URL = '/offline/';
 const MAX_RUNTIME_ENTRIES = 60;
+
+const SENSITIVE_DOCUMENT_PATHS = new Set([
+  '/login',
+  '/login/index.html',
+  '/login.html',
+  '/signup',
+  '/signup/index.html',
+  '/signup.html',
+  '/dashboard',
+  '/password-reset',
+  '/password-reset/index.html',
+  '/reset-confirmation',
+  '/reset-confirmation/index.html'
+]);
+
+function normalizePathname(pathname) {
+  if (typeof pathname !== 'string' || !pathname.startsWith('/')) {
+    return '/';
+  }
+
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    return pathname.slice(0, -1);
+  }
+
+  return pathname;
+}
+
+function matchesPathPrefix(pathname, prefix) {
+  if (prefix.endsWith('/')) {
+    return pathname === prefix.slice(0, -1) || pathname.startsWith(prefix);
+  }
+
+  return pathname === prefix || pathname.startsWith(prefix + '/');
+}
+
+function isProtectedRoute(pathname) {
+  const normalizedPath = normalizePathname(pathname);
+  return matchesPathPrefix(normalizedPath, '/dashboard')
+    || matchesPathPrefix(normalizedPath, '/password-reset')
+    || matchesPathPrefix(normalizedPath, '/reset-confirmation');
+}
+
+function isSensitiveDocumentPath(pathname) {
+  const normalizedPath = normalizePathname(pathname);
+  return SENSITIVE_DOCUMENT_PATHS.has(normalizedPath) || isProtectedRoute(normalizedPath);
+}
 
 const CORE_ASSETS = [
   '/',
   '/index.html',
-  OFFLINE_URL,
-  '/manifest.json',
-  '/assets/css/style.css',
-  '/assets/js/script.js',
-  '/components/nav.html',
-  '/components/footer.html',
-  '/components/support-cta.html',
-  '/favicon.ico',
-  '/favicon-48x48.png',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
   '/about/',
+  '/about/index.html',
+  '/account-deletion/',
+  '/account-deletion/index.html',
   '/class06/',
   '/class07/',
   '/class08/',
   '/class09/',
   '/class10/',
   '/class11/',
-  '/class12/'
+  '/class12/',
+  '/future-content/',
+  '/future-content/index.html',
+  '/privacy/',
+  '/privacy/index.html',
+  '/terms/',
+  '/terms/index.html',
+  OFFLINE_URL,
+  '/offline.html',
+  '/offline/index.html',
+  '/manifest.json',
+  '/assets/css/style.css',
+  '/assets/js/script.js',
+  '/assets/js/homepage-hero.js',
+  '/assets/js/auth-config.js',
+  '/assets/js/auth-guard.js',
+  '/assets/js/auth-logout-handler.js',
+  '/assets/js/progress-tracker.js',
+  '/assets/js/quiz-score-handler.js',
+  '/assets/js/tick-manager.js',
+  '/ai-chat.js',
+  '/components/nav.html',
+  '/components/footer.html',
+  '/components/support-cta.html',
+  '/favicon.ico',
+  '/favicon-48x48.png',
+  '/favicon-32x32.png',
+  '/favicon-16x16.png',
+  '/apple-touch-icon.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -49,24 +117,16 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
-function isNotesOrPractice(pathname) {
-  return pathname.startsWith('/notes/')
-    || pathname.startsWith('/practice/')
-    || pathname.startsWith('/practice-advanced/')
-    || pathname.startsWith('/practice-solution/')
-    || pathname.startsWith('/video-lessons/');
-}
-
-function isComponent(pathname) {
-  return pathname.startsWith('/components/');
-}
-
 function isStaticAsset(request, pathname) {
   if (pathname.startsWith('/assets/')) return true;
   if (request.destination) {
     return ['style', 'script', 'image', 'font'].includes(request.destination);
   }
   return false;
+}
+
+function isComponent(pathname) {
+  return matchesPathPrefix(pathname, '/components');
 }
 
 function shouldCacheResponse(response) {
@@ -99,6 +159,8 @@ async function cacheFirst(request) {
     if (request.destination === 'document') {
       const offline = await caches.match(OFFLINE_URL);
       if (offline) return offline;
+      const offlineCompat = await caches.match('/offline.html');
+      if (offlineCompat) return offlineCompat;
     }
     throw error;
   }
@@ -120,7 +182,23 @@ async function networkFirst(request) {
     if (request.destination === 'document') {
       const offline = await caches.match(OFFLINE_URL);
       if (offline) return offline;
+      const offlineCompat = await caches.match('/offline.html');
+      if (offlineCompat) return offlineCompat;
     }
+    throw error;
+  }
+}
+
+async function networkOnlyDocument(request) {
+  try {
+    return await fetch(request, { cache: 'no-store' });
+  } catch (error) {
+    const offline = await caches.match(OFFLINE_URL);
+    if (offline) return offline;
+    const offlineCompat = await caches.match('/offline.html');
+    if (offlineCompat) return offlineCompat;
+
+    console.error(`Service Worker: Failed to fetch document at ${request.url}`, error);
     throw error;
   }
 }
@@ -133,15 +211,20 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  const pathname = url.pathname;
+  const pathname = normalizePathname(url.pathname);
 
-  if (isStaticAsset(request, pathname) || isComponent(pathname) || isNotesOrPractice(pathname)) {
-    event.respondWith(cacheFirst(request));
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    if (isSensitiveDocumentPath(pathname)) {
+      event.respondWith(networkOnlyDocument(request));
+      return;
+    }
+
+    event.respondWith(networkFirst(request));
     return;
   }
 
-  if (request.mode === 'navigate' || request.destination === 'document') {
-    event.respondWith(networkFirst(request));
+  if (isStaticAsset(request, pathname) || isComponent(pathname)) {
+    event.respondWith(cacheFirst(request));
     return;
   }
 
