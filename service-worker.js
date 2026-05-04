@@ -1,5 +1,5 @@
 /* RaushanSYNC Maths PWA Service Worker */
-const CACHE_VERSION = 'maths-v1.1.1';
+const CACHE_VERSION = 'maths-v1.1.1.1';
 const CORE_CACHE = 'rs-core-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'rs-runtime-' + CACHE_VERSION;
 const OFFLINE_URL = '/offline/';
@@ -59,6 +59,14 @@ const CORE_ASSETS = [
   '/account-deletion/',
   '/account-deletion/index.html',
   '/class06/',
+  '/notes/class06/01-patterns-in-mathematics/',
+  '/notes/class06/01-patterns-in-mathematics/index.html',
+  '/notes/class06/01-patterns-in-mathematics/01_introduction_to_number_systems/',
+  '/notes/class06/01-patterns-in-mathematics/01_introduction_to_number_systems/index.html',
+  '/notes/class06/01-patterns-in-mathematics/02-introduction-to-number-systems/',
+  '/notes/class06/01-patterns-in-mathematics/02-introduction-to-number-systems/index.html',
+  '/notes/class06/01-patterns-in-mathematics/03-introduction-to-number-systems/',
+  '/notes/class06/01-patterns-in-mathematics/03-introduction-to-number-systems/index.html',
   '/class07/',
   '/class08/',
   '/class09/',

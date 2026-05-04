@@ -79,4 +79,22 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/01_introduction_to_number_systems/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/02-introduction-to-number-systems/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/03-introduction-to-number-systems/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>

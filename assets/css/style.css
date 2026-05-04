@@ -1968,12 +1968,26 @@ html.home-hero-reserved .home-page .welcome-section .welcome-actions {
 
 /* ── Breadcrumb ─────────────────────────────────────────── */
 .breadcrumb {
+    position: sticky;
+    top: 1rem;
+    z-index: 95;
     margin: -1.35rem 0 1.8rem;
     padding: 0.7rem 0.85rem;
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 8px 18px -14px rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.header--auto-hide ~ main .breadcrumb {
+    transition: top 0.3s ease;
+}
+body:has(.header--hidden) .breadcrumb {
+    top: -10rem;
+}
+body:not(:has(.header--hidden)) .breadcrumb {
+    top: calc(var(--header-height) + 1rem);
 }
 
 .breadcrumb ol {
