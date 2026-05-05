@@ -97,4 +97,22 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/04-whole-numbers/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/05-patterns-in-mathematics/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/06-patterns-in-mathematics/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>

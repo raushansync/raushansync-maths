@@ -1,5 +1,5 @@
 /* RaushanSYNC Maths PWA Service Worker */
-const CACHE_VERSION = 'maths-v1.1.1.2';
+const CACHE_VERSION = 'maths-v1.1.1.4';
 const CORE_CACHE = 'rs-core-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'rs-runtime-' + CACHE_VERSION;
 const OFFLINE_URL = '/offline/';
@@ -67,6 +67,12 @@ const CORE_ASSETS = [
   '/notes/class06/01-patterns-in-mathematics/02-introduction-to-number-systems/index.html',
   '/notes/class06/01-patterns-in-mathematics/03-introduction-to-number-systems/',
   '/notes/class06/01-patterns-in-mathematics/03-introduction-to-number-systems/index.html',
+  '/notes/class06/01-patterns-in-mathematics/04-whole-numbers/',
+  '/notes/class06/01-patterns-in-mathematics/04-whole-numbers/index.html',
+  '/notes/class06/01-patterns-in-mathematics/05-patterns-in-mathematics/',
+  '/notes/class06/01-patterns-in-mathematics/05-patterns-in-mathematics/index.html',
+  '/notes/class06/01-patterns-in-mathematics/06-patterns-in-mathematics/',
+  '/notes/class06/01-patterns-in-mathematics/06-patterns-in-mathematics/index.html',
   '/class07/',
   '/class08/',
   '/class09/',
@@ -96,6 +102,13 @@ const CORE_ASSETS = [
   '/components/nav.html',
   '/components/footer.html',
   '/components/support-cta.html',
+  '/notes/class06/01-patterns-in-mathematics/10_patterns_in_mathematics_successor_and_predecessor_in_number_line.png',
+  '/notes/class06/01-patterns-in-mathematics/11_patterns_in_mathematics__arithematic_operations_on_number_line.png',
+  '/notes/class06/01-patterns-in-mathematics/12_patterns_in_mathematics_some_number_sequence_examples.png',
+  '/notes/class06/01-patterns-in-mathematics/13_patterns_in_mathematics__complete_graphs.png',
+  '/notes/class06/01-patterns-in-mathematics/14_patterns_in_mathematics_stacked_squares.png',
+  '/notes/class06/01-patterns-in-mathematics/15_patterns_in_mathematics__stacked_triangles.png',
+  '/notes/class06/01-patterns-in-mathematics/16_patterns_in_mathematics_koch_snowflake.png',
   '/favicon.ico',
   '/favicon-48x48.png',
   '/favicon-32x32.png',

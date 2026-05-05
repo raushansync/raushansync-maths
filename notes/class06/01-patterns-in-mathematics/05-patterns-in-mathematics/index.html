@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Basic Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
+
+    <!-- Primary SEO -->
+    <title>Part 5 of 6: Patterns in Mathematics | Class 6 Mathematics | RaushanSYNC Maths</title>
+    <meta name="description"
+        content="Learn what mathematics is, explore number sequences, visualise patterns, and understand relationships among sequences as part of Chapter 1: Patterns in Mathematics for Class 6 students.">
+    <meta name="author" content="Raushan Kumar">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical -->
+    <link rel="canonical"
+        href="https://maths.raushansync.com/notes/class06/01-patterns-in-mathematics/05-patterns-in-mathematics/">
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Fonts & Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .image-placeholder {
+            width: 100%;
+            min-height: 220px;
+            margin: 1rem 0 2rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
+            color: var(--secondary-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .number-table-wrap {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .number-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .number-table thead tr {
+            border-bottom: 2px solid var(--border-color);
+            text-align: left;
+        }
+
+        .number-table th,
+        .number-table td {
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        .number-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .visualizer-container {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            background:
+                radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 38%),
+                linear-gradient(180deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.01)),
+                var(--card-background);
+            padding: clamp(1.25rem, 3vw, 2rem);
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            max-width: 720px;
+            margin: 2rem auto 2.75rem;
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        .controls {
+            margin-bottom: 0;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        input[type=range] {
+            width: min(100%, 26rem);
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .equation {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0;
+            min-height: 30px;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.14);
+        }
+
+        .dark-mode .equation {
+            background: rgba(96, 165, 250, 0.12);
+            border-color: rgba(96, 165, 250, 0.22);
+        }
+
+        canvas {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.15)), var(--card-background);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            width: min(100%, 420px);
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .dark-mode .visualizer-container {
+            background:
+                radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 38%),
+                linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02)),
+                var(--card-background);
+        }
+
+        .dark-mode canvas {
+            background: linear-gradient(180deg, rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.7)), var(--card-background);
+        }
+
+        .controls label {
+            color: var(--secondary-text-color);
+            font-weight: 600;
+        }
+
+        .controls #nValue {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+    </style>
+
+    <!-- Theme Loader -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (!theme && prefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">RaushanSYNC Maths</a>
+            <div id="nav"></div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NOTES CONTENT -->
+    <main class="notes-page practice-page">
+        <div class="notes-container">
+            <header class="notes-header">
+                <div class="notes-header-left">
+                    <h1>Part 5: Patterns in Mathematics</h1>
+                    <p>Section A: What Mathematics Is, and Number Sequences</p>
+                </div>
+
+                <div class="notes-header-actions">
+                    <span class="page-header-tick-label">Mark completed</span>
+                    <div id="note-tick" data-tick-container data-tick-position="header" data-tick-type="article"></div>
+                </div>
+            </header>
+
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/class06/">Class 6</a></li>
+                    <li><a href="/notes/class06/01-patterns-in-mathematics/">Chapter 1: Patterns in Mathematics</a></li>
+                    <li aria-current="page">Part 5 of 6: Patterns in Mathematics + Number Sequence</li>
+                </ol>
+            </nav>
+
+            <section>
+                <h2>1. Big Picture Overview</h2>
+                <p><strong>What Mathematics Is, and Number Sequences</strong></p>
+                <p>This section asks a question that most mathematics courses never ask: What is mathematics, actually?
+                </p>
+                <p>The answer it offers is both surprising and liberating: mathematics is, at its core, the search for
+                    patterns - and for the reasons why those patterns exist.</p>
+                <p>This reframes everything. Mathematics is not a collection of rules to follow. It is an inquiry - a
+                    search for structure in the world. Numbers, shapes, music, nature, and technology all contain hidden
+                    patterns, and mathematics is the discipline that finds and explains them.</p>
+                <p>This section begins with the most basic kind of pattern: sequences of numbers. These are lists of
+                    numbers that follow a rule - and your task is not just to continue the list, but to understand why
+                    the rule works and how sequences relate to each other.</p>
+                <p>This is where mathematical thinking truly begins.</p>
+                <div class="notes-box summary">
+                    <p>Mathematics is not just computation. It is pattern-seeking, explanation-seeking, and
+                        structure-seeking. Number sequences give you the first clear place to practise that way of
+                        thinking.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2>2. Core Concepts</h2>
+
+                <h3>Concept 1 — What Is Mathematics? (The Conceptual Foundation)</h3>
+
+                <h4>a. Intuitive Explanation</h4>
+                <p>Think about the last time you noticed a pattern - stripes on a zebra, tiles on a floor, the way a
+                    plant's leaves spiral outward. Patterns are not just decorative. They carry information. They arise
+                    because something is generating them - a rule, a force, a structure.</p>
+                <p>Mathematics is the discipline that identifies these generating rules and explains why they produce
+                    the patterns they do.</p>
+
+                <h4>b. Formal Idea</h4>
+                <div class="notes-box">
+                    <p>Mathematics is the search for patterns and for the explanations of why those patterns exist.</p>
+                    <p>This is important: finding a pattern is only half the work. The explanation - the why - is
+                        equally important, and often more powerful. Explanations allow patterns to be extended, applied,
+                        and used in entirely different contexts.</p>
+                </div>
+
+                <h4>c. Deep Explanation</h4>
+                <p>Why does the explanation matter as much as the pattern itself?</p>
+                <p>Consider a simple example: you notice that every even number can be divided by 2. You could memorise
+                    this as a fact. But if you understand why - because an even number is defined as a number that is
+                    formed by counting in pairs, and pairs always divide into two equal groups - then you can extend
+                    this reasoning. You can apply it in new situations, verify it without memorising examples, and use
+                    it to build further ideas.</p>
+                <p>Patterns + Explanations = Mathematical Understanding.</p>
+                <p>The section also emphasises that this kind of thinking has practical power. Understanding patterns in
+                    planetary motion led to the theory of gravity. Understanding patterns in DNA sequences has led to
+                    medical breakthroughs. The pattern itself is the beginning; the explanation is what drives progress.
+                </p>
+
+                <h4>d. Misconception</h4>
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "In mathematics, you find the answer and you're done. Asking
+                        'why' is philosophy, not math."</p>
+                    <p><strong>Why it is incorrect:</strong> In serious mathematics, the proof - the explanation of why
+                        something is true - is the actual mathematical work. A pattern observed without an explanation
+                        is a conjecture, not a proven result.</p>
+                </div>
+
+                <h3>Concept 2 — Number Sequences</h3>
+
+                <h4>a. Intuitive Explanation</h4>
+                <p>A sequence is a list of numbers arranged in a specific order, where each number is there for a reason
+                    - it follows from a rule. Your job when studying sequences is to find the rule.</p>
+                <p>But there is a deeper skill here: not just finding rules, but seeing relationships between sequences.
+                    This is where mathematics becomes genuinely beautiful.</p>
+
+                <h4>b. Formal Idea</h4>
+                <div class="notes-box">
+                    <p>A number sequence is an ordered list of numbers that follows a specific pattern or rule.</p>
+                    <p>Some fundamental sequences you will study include:</p>
+                    <ul>
+                        <li>All 1's: 1, 1, 1, 1, ... (the rule: every term is 1)</li>
+                        <li>Counting numbers: 1, 2, 3, 4, 5, ... (the rule: add 1 each time)</li>
+                        <li>Odd numbers: 1, 3, 5, 7, 9, ... (the rule: add 2 each time, starting from 1)</li>
+                        <li>Even numbers: 2, 4, 6, 8, 10, ... (the rule: add 2 each time, starting from 2)</li>
+                        <li>Triangular numbers: 1, 3, 6, 10, 15, 21, ... (the rule: add increasing counting numbers -
+                            add 1, then 2, then 3, and so on)</li>
+                        <li>Squares: 1, 4, 9, 16, 25, 36, ... (the rule: each term is a counting number multiplied by
+                            itself)</li>
+                        <li>Cubes: 1, 8, 27, 64, 125, ... (the rule: each term is a counting number multiplied by itself
+                            twice)</li>
+                        <li>Virahānka numbers: 1, 2, 3, 5, 8, 13, 21, ... (the rule: each term is the sum of the two
+                            terms before it)</li>
+                        <li>Powers of 2: 1, 2, 4, 8, 16, 32, ... (the rule: each term is doubled)</li>
+                        <li>Powers of 3: 1, 3, 9, 27, 81, ... (the rule: each term is tripled)</li>
+                    </ul>
+                </div>
+
+                <h4>c. Deep Explanation</h4>
+                <p>Why are these called "triangular" numbers?</p>
+                <p>The nth triangular number is exactly the count of dots needed to form a solid triangle with n dots on
+                    each side. For example, a triangle with 4 dots on each side contains 1 + 2 + 3 + 4 = 10 dots. The
+                    visual geometry explains the name.</p>
+                <p>Why are these called "square" numbers?</p>
+                <p>The nth square number is the count of dots in an n x n square grid. 16 dots fill a 4 x 4 grid
+                    perfectly. The geometry of a square directly defines this sequence.</p>
+                <p>Why are these called "cubes"?</p>
+                <p>The nth cube number is the count of unit cubes in an n x n x n three-dimensional cube. 8 unit cubes
+                    fill a 2 x 2 x 2 cube; 27 fill a 3 x 3 x 3 cube. The three-dimensionality is embedded in the name.
+                </p>
+                <p>What makes Virahānka numbers special?</p>
+                <p>The Virahānka sequence (known in the West as the Fibonacci sequence) is generated by a recursive
+                    rule: each term is the sum of the two immediately preceding terms. This sequence appears remarkably
+                    often in nature - in the spiral arrangements of sunflower seeds, the branching of trees, and the
+                    proportions of shells. Its appearance in nature is not a coincidence - it reflects how biological
+                    growth processes often work.</p>
+                <p>Powers of 2 and 3:</p>
+                <p>These sequences grow by multiplication rather than addition. They grow much faster than additive
+                    sequences. Doubling (powers of 2) appears in computer science, biology (cell division), and
+                    financial calculations. The rapid growth of these sequences is why they capture attention in science
+                    and technology.</p>
+
+                <img src="../12_patterns_in_mathematics_some_number_sequence_examples.png"
+                    alt="A visual table showing examples of number sequences, with dot-diagram illustrations for triangular numbers, square numbers, and cubes"
+                    style="width: 100%; border-radius: 12px; margin: 1rem 0 2rem; display: block;">
+
+                <h4>d. Common Misconceptions</h4>
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "There is always just one rule that generates any sequence."</p>
+                    <p><strong>Why it is nuanced:</strong> Some sequences can be described by more than one rule. Square
+                        numbers, for instance, can be described as "n multiplied by itself" - but they also arise from
+                        "the sum of odd numbers starting from 1" (which you will discover in the next concept).
+                        Different rules can produce the same sequence, and this multiplicity is actually a sign of deep
+                        mathematical richness.</p>
+                </div>
+
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "The Virahānka sequence is just about adding - it's not as
+                        'mathematical' as multiplication-based sequences."</p>
+                    <p><strong>Why it is incorrect:</strong> The Virahānka sequence has properties that connect to
+                        geometry, nature, algebra, and even irrational numbers. Its rule is simple, but its consequences
+                        are profound. Do not judge a sequence's depth by the simplicity of its generating rule.</p>
+                </div>
+
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "Powers of 2 and 'even numbers' are the same sequence because
+                        both are related to 2."</p>
+                    <p><strong>Why it is incorrect:</strong> Even numbers grow by adding 2 (2, 4, 6, 8, ...) - constant
+                        addition. Powers of 2 grow by multiplying by 2 (1, 2, 4, 8, 16, ...) - constant multiplication.
+                        These produce entirely different sequences that diverge rapidly.</p>
+                </div>
+
+                <h3>Concept 3 — Visualising Number Sequences</h3>
+
+                <h4>a. Intuitive Explanation</h4>
+                <p>Numbers are abstract - they live in the mind. But when you can see a number sequence as a picture,
+                    the pattern becomes tangible, and the rule often becomes obvious without any calculation.</p>
+                <p>Visualisation is not just a learning aid. For mathematicians, a well-chosen picture can be a complete
+                    and rigorous explanation.</p>
+
+                <h4>b. Formal Idea</h4>
+                <div class="notes-box">
+                    <p>Many number sequences can be represented by arrangements of dots or physical objects, where the
+                        shape of the arrangement encodes the rule of the sequence.</p>
+                </div>
+
+                <h4>c. Deep Explanation</h4>
+                <p>Consider triangular numbers. When you draw dots in a triangular arrangement - 1 dot, then a row of 2,
+                    then a row of 3, and so on - you can immediately see why the next triangular number is always the
+                    previous one plus the next counting number. The picture shows the rule.</p>
+                <p>For square numbers, arranging dots in a perfect square grid makes it visually clear why the nth term
+                    is n x n.</p>
+                <p>For cubes, a three-dimensional arrangement of unit cubes makes the rule tangible - though this is
+                    harder to draw.</p>
+                <p>The most powerful use of visualisation is in explaining relationships between sequences - which is
+                    the subject of the next concept. A picture can sometimes explain a relationship so clearly that no
+                    words or algebra are needed at all.</p>
+
+
+                <h4>d. Misconception</h4>
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "Drawing pictures is for students who can't do the algebra. Real
+                        mathematics is symbolic."</p>
+                    <p><strong>Why it is incorrect:</strong> Visual proofs are entirely rigorous in mathematics. Some of
+                        the deepest results in mathematics have purely visual proofs. Visualisation develops spatial
+                        reasoning, which is a distinct and valuable form of mathematical intelligence.</p>
+                </div>
+
+                <h3>Concept 4 — Relations Among Number Sequences</h3>
+
+                <h4>a. Intuitive Explanation</h4>
+                <p>Here is a striking observation: start adding odd numbers together, beginning from 1.</p>
+                <p>Just 1: the total is 1</p>
+                <p>1 + 3: the total is 4</p>
+                <p>1 + 3 + 5: the total is 9</p>
+                <p>1 + 3 + 5 + 7: the total is 16</p>
+                <p>These totals - 1, 4, 9, 16 - are the square numbers. Is this a coincidence? No. And the explanation
+                    turns out to be beautiful.</p>
+
+                <h4>b. Formal Idea</h4>
+                <div class="notes-box">
+                    <p><strong>Relationship 1:</strong> The sum of the first n odd numbers equals the nth square number.
+                    </p>
+                    <p>(1 = 1², 1+3 = 2², 1+3+5 = 3², and so on.)</p>
+                    <p><strong>Relationship 2:</strong> Adding counting numbers up and then back down (1; 1+2+1;
+                        1+2+3+2+1; ...) also produces square numbers.</p>
+                    <p>(1 = 1², 1+2+1 = 4 = 2², 1+2+3+2+1 = 9 = 3², and so on.)</p>
+                </div>
+
+                <h4>c. Deep Explanation</h4>
+                <p>Why do odd numbers add up to squares?</p>
+                <p>Picture a square grid of dots. Now try to partition those dots into L-shaped brackets, starting from
+                    the top-left corner. The first bracket has 1 dot. The second L-shape has 3 dots. The third L-shape
+                    has 5 dots. The fourth L-shape has 7 dots. Each L-shape adds the next odd number.</p>
+                <p>This visual partition shows exactly why the sum of the first n odd numbers is always a perfect
+                    square: because each odd number is precisely the L-shaped "shell" that expands a square by one layer
+                    in two directions.</p>
+                <p>This is a proof by picture - a complete, rigorous explanation that requires no algebra.</p>
+                <p>Why does this matter beyond a clever trick?</p>
+                <p>Because it reveals that odd numbers and square numbers - which seem like separate sequences - are
+                    secretly connected through this additive structure. The two sequences are not independent; they are
+                    two faces of the same underlying geometry.</p>
+                <p>The "adding up and down" relationship:</p>
+                <p>1 + 2 + 3 + 2 + 1 = 9. Picture a diamond-shaped arrangement of dots: one dot at the top, two in the
+                    next row, three at the widest point, then decreasing back down. This diamond is equivalent to a
+                    square grid rotated 45 degrees - and so it contains n² dots for the nth term.</p>
+                <div class="visualizer-container">
+                    <div class="controls">
+                        <label for="nSlider" style="font-weight: 600; color: var(--secondary-text-color);">
+                            Grid Size (n): <span id="nValue">5</span>
+                        </label>
+                        <br>
+                        <input type="range" id="nSlider" min="1" max="10" value="5">
+                    </div>
+
+                    <div class="equation" id="equation">1 + 3 + 5 + 7 + 9 = 25 = 5²</div>
+
+                    <canvas id="gridCanvas" width="400" height="400"></canvas>
+                </div>
+
+                <h4>d. Common Misconceptions</h4>
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "These are just numerical coincidences - there's no reason
+                        sequences should be related."</p>
+                    <p><strong>Why it is incorrect:</strong> The relationships between sequences arise from the
+                        underlying structure of numbers and geometry. They are not coincidences; they are consequences
+                        of deep mathematical truths. Every such relationship has an explanation.</p>
+                </div>
+
+                <div class="notes-box careful">
+                    <p><strong>Misconception:</strong> "Once I see the pattern in numbers (1, 4, 9, 16, ...), I don't
+                        need the picture."</p>
+                    <p><strong>Why it is partially incorrect:</strong> The picture explains why the pattern holds for
+                        all cases - not just the ones you checked. Without the picture (or some equivalent explanation),
+                        you have observed a pattern but not understood it. The explanation is what gives you certainty
+                        that it continues forever.</p>
+                </div>
+
+                <h4>e. Conceptual Connections</h4>
+                <p>The relationship between odd numbers and squares is a preview of algebraic thinking: the idea that
+                    two apparently different expressions can describe the same quantity, and that this equivalence is
+                    explained by structure, not coincidence.</p>
+                <p>It also connects to the Virahānka sequence: when you add pairs of consecutive triangular numbers, you
+                    get square numbers (1+3=4, 3+6=9, 6+10=16, ...). Again, squares appear - this time from a different
+                    direction entirely.</p>
+            </section>
+
+            <section>
+                <h2>3. Important Distinctions</h2>
+                <div class="number-table-wrap">
+                    <table class="number-table" aria-label="Comparison of number sequences and their generating rules">
+                        <thead>
+                            <tr>
+                                <th>Sequence</th>
+                                <th>Generated by</th>
+                                <th>Visual shape</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Counting numbers</td>
+                                <td>Add 1 each time</td>
+                                <td>Rows of dots</td>
+                            </tr>
+                            <tr>
+                                <td>Odd numbers</td>
+                                <td>Add 2, starting from 1</td>
+                                <td>L-shaped shells of dots</td>
+                            </tr>
+                            <tr>
+                                <td>Even numbers</td>
+                                <td>Add 2, starting from 2</td>
+                                <td>2-column dot arrays</td>
+                            </tr>
+                            <tr>
+                                <td>Triangular numbers</td>
+                                <td>Add successive counting numbers</td>
+                                <td>Triangular dot arrangements</td>
+                            </tr>
+                            <tr>
+                                <td>Square numbers</td>
+                                <td>Multiply a number by itself</td>
+                                <td>Square dot grids</td>
+                            </tr>
+                            <tr>
+                                <td>Cube numbers</td>
+                                <td>Multiply by itself twice</td>
+                                <td>Cubic arrangements</td>
+                            </tr>
+                            <tr>
+                                <td>Virahānka numbers</td>
+                                <td>Sum of two previous terms</td>
+                                <td>No simple geometric form</td>
+                            </tr>
+                            <tr>
+                                <td>Powers of 2</td>
+                                <td>Multiply by 2</td>
+                                <td>Dimensional growth (line &rarr; square &rarr; cube)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section>
+                <h2>4. Concept Checkpoints</h2>
+                <ul>
+                    <li>Without computing, can you determine what the sum of the first 50 odd numbers is? What is the
+                        reasoning that lets you answer this without any calculation?</li>
+                    <li>The Virahānka sequence uses the rule: each term = sum of previous two terms. Can you invent a
+                        sequence with the rule: each term = sum of previous three terms? What sequence would you start
+                        with?</li>
+                    <li>You are told that 36 is both a triangular number and a square number. Can you see a picture in
+                        your mind that shows both arrangements of 36 dots? What does this tell you about the
+                        relationship between the triangular and square sequences?</li>
+                    <li>Powers of 2 grow by multiplying each time. Counting numbers grow by adding. Which grows faster,
+                        and by how much? At what point does the powers-of-2 sequence overtake a sequence that adds 100
+                        each time?</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>5. Chapter-Level Mental Model</h2>
+                <p>Number sequences are not lists to memorise. They are structures to understand.</p>
+                <p>Each sequence embodies a rule. That rule often has a geometric interpretation. And different
+                    sequences are connected by relationships that can be seen and explained visually.</p>
+                <p>The key insight this section builds is that mathematics is about finding structure, and structure can
+                    be seen as well as calculated. The most powerful mathematical explanations are often those that make
+                    a truth visible - so clear that it needs no further argument.</p>
+            </section>
+
+            <section class="palette important">
+                <p><strong>End of Part 5:</strong> Continue to Part 6: Patterns in Mathematics - Shape Sequences and
+                    Deeper Relationships</p>
+                <a href="../06-patterns-in-mathematics/" class="video-solution-btn">▶ Shape Sequences</a>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="support-cta"></div>
+
+    <div class="notes-watermark">
+        Source: RaushanSYNC Maths · https://maths.raushansync.com
+        Licensed for personal, non-commercial learning only.
+    </div>
+
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="/assets/js/auth-config.js"></script>
+    <script src="/assets/js/auth-guard.js"></script>
+    <script src="/assets/js/progress-tracker.js"></script>
+    <script src="/assets/js/tick-manager.js"></script>
+    <script src="/assets/js/script.js"></script>
+    <script>
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('nSlider');
+        const nValueLabel = document.getElementById('nValue');
+        const equationDiv = document.getElementById('equation');
+
+        function getCssVariable(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function getLayerColors() {
+            return document.documentElement.classList.contains('dark-mode')
+                ? ['#93c5fd', '#67e8f9', '#c4b5fd', '#6ee7b7', '#f9a8d4', '#fde68a', '#7dd3fc', '#a5b4fc', '#86efac', '#fda4af']
+                : ['#3b82f6', '#0ea5e9', '#6366f1', '#14b8a6', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#2563eb', '#10b981'];
+        }
+
+        function drawVisualizer() {
+            const n = parseInt(slider.value);
+            nValueLabel.textContent = n;
+            const colors = getLayerColors();
+            const backgroundColor = getCssVariable('--card-background') || '#ffffff';
+            const borderColor = getCssVariable('--border-color') || 'rgba(0,0,0,0.15)';
+
+            // 1. Update the Math Equation
+            let odds = [];
+            let sum = 0;
+            for (let i = 0; i < n; i++) {
+                const oddNumber = 2 * i + 1;
+                odds.push(oddNumber);
+                sum += oddNumber;
+            }
+            equationDiv.textContent = `${odds.join(' + ')} = ${sum} = ${n}²`;
+
+            // 2. Clear the Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 3. Draw the Grid
+            const maxGridSize = 10;
+            const padding = 40;
+            const usableWidth = canvas.width - padding * 2;
+            const spacing = usableWidth / (maxGridSize - 1);
+            const startX = padding;
+            const startY = padding;
+
+            for (let row = 0; row < n; row++) {
+                for (let col = 0; col < n; col++) {
+                    // The "layer" is determined by the maximum of the row or column index
+                    const layer = Math.max(row, col);
+                    const x = startX + col * spacing;
+                    const y = startY + row * spacing;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.fillStyle = colors[layer];
+                    ctx.fill();
+
+                    // Add a subtle border to the dots
+                    ctx.strokeStyle = borderColor;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Redraw when the slider changes
+        slider.addEventListener('input', drawVisualizer);
+
+        // Keep the visualizer aligned with theme changes.
+        const themeObserver = new MutationObserver(() => drawVisualizer());
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+        // Initial draw on page load
+        drawVisualizer(); 
+    </script>
+</body>
+
+</html>
