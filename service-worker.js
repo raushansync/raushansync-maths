@@ -1,5 +1,5 @@
 /* RaushanSYNC Maths PWA Service Worker */
-const CACHE_VERSION = 'maths-v1.1.1.4';
+const CACHE_VERSION = 'maths-v1.1.1.5';
 const CORE_CACHE = 'rs-core-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'rs-runtime-' + CACHE_VERSION;
 const OFFLINE_URL = '/offline/';

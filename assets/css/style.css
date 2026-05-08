@@ -1261,19 +1261,23 @@ main {
   margin-top: 0.4rem;
 }
 
-.subscribe-card {
+.support-improvement-card {
   margin: 1rem 0;
-  padding: 1.25rem;
+  padding: 2rem 1.25rem;
   border: 1px dashed var(--border-color);
   border-radius: 12px;
   background: var(--card-background);
   text-align: center;
 }
 
-.subscribe-card p {
+.support-improvement-card p {
   margin-bottom: 1rem;
   color: var(--secondary-text-color);
   font-size: 0.95rem;
+}
+
+.support-improvement-card .support-improvement-card__thanks {
+  margin: 1rem 0 0;
 }
 
 /* =========================================================
@@ -1903,7 +1907,7 @@ html.home-hero-reserved .home-page .welcome-section .welcome-actions {
     color: #dc3545;
 }
 
-.btn-subscribe-card {
+.btn-support-improvement-card {
   display: inline-block;
   padding: 10px 18px;
   margin-top: 12px;
@@ -1924,20 +1928,21 @@ html.home-hero-reserved .home-page .welcome-section .welcome-actions {
     transform 0.15s ease;
 }
 
-.btn-subscribe-card:hover {
+.btn-support-improvement-card:hover {
   background-color: rgba(37, 99, 235, 0.08);
   color: var(--accent-color, #2563eb);
   transform: translateY(-1px);
 }
 
-.btn-subscribe-card:active {
+.btn-support-improvement-card:active {
   transform: translateY(0);
 }
 
-.btn-subscribe-card:focus-visible {
+.btn-support-improvement-card:focus-visible {
   outline: 2px solid rgba(37, 99, 235, 0.4);
   outline-offset: 3px;
 }
+
 
 /* =========================================================
    OFFLINE PAGE — Calm, Consistent Layout
