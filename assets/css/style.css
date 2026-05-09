@@ -1,15 +1,15 @@
-/* No changes needed to this file */
+/* Global theme variables */
 :root {
-  --primary-color: #3b82f6;
+  --primary-color: #2563eb;
   --primary-color-dark: #2563eb;
-  --background-color: #f9fafb;
-  --text-color: #1f2937;
-  --secondary-text-color: #6b7280;
+  --background-color: #f6f9ff;
+  --text-color: #172033;
+  --secondary-text-color: #475569;
   --card-background: #ffffff;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
-  --border-color: #e5e7eb;
-  --header-bg: rgba(255, 255, 255, 0.85);
-  --header-height: 70px;
+  --card-shadow: 0 10px 26px -12px rgba(15, 23, 42, 0.22), 0 3px 10px -6px rgba(15, 23, 42, 0.18);
+  --border-color: #cbd5e1;
+  --header-bg: rgba(255, 255, 255, 0.96);
+  --header-height: 64px;
   --container-padding: 1.5rem;
 }
 
@@ -504,19 +504,18 @@ main {
   margin: 0;
   width: 100%;
   font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+  transition: opacity 0.42s ease;
 }
 
-.welcome-section #auth-buttons-user.home-learning-card h2.home-learning-title--typing::after {
-  content: '_';
-  display: inline-block;
-  margin-left: 0.08em;
-  color: currentColor;
-  animation: homeLearningCursorBlink 1s steps(1, end) infinite;
+@media (min-width: 769px) {
+  .welcome-section #auth-buttons-user.home-learning-card h2 {
+    font-size: clamp(1.35rem, 1.75vw, 1.58rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .welcome-section #auth-buttons-user.home-learning-card h2.home-learning-title--typing::after {
-    animation: none;
+  .welcome-section #auth-buttons-user.home-learning-card h2 {
+    transition: none;
   }
 }
 
@@ -545,18 +544,6 @@ main {
 .welcome-section #auth-buttons-user.home-learning-card.home-learning-card--locked .home-learning-badge {
   background: rgba(239, 68, 68, 0.12);
   color: #b91c1c;
-}
-
-@keyframes homeLearningCursorBlink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-
-  50%,
-  100% {
-    opacity: 0;
-  }
 }
 
 .content-section {
@@ -1263,7 +1250,7 @@ main {
 
 .support-improvement-card {
   margin: 1rem 0;
-  padding: 2rem 1.25rem;
+  padding: 1.25rem;
   border: 1px dashed var(--border-color);
   border-radius: 12px;
   background: var(--card-background);
@@ -1276,8 +1263,9 @@ main {
   font-size: 0.95rem;
 }
 
-.support-improvement-card .support-improvement-card__thanks {
-  margin: 1rem 0 0;
+.support-improvement-card__thanks {
+  margin-top: 1.35rem;
+  margin-bottom: 0;
 }
 
 /* =========================================================
@@ -1942,7 +1930,6 @@ html.home-hero-reserved .home-page .welcome-section .welcome-actions {
   outline: 2px solid rgba(37, 99, 235, 0.4);
   outline-offset: 3px;
 }
-
 
 /* =========================================================
    OFFLINE PAGE — Calm, Consistent Layout
@@ -2831,6 +2818,10 @@ body:not(:has(.header--hidden)) .breadcrumb {
 
 body.ai-chat-open {
     overflow: hidden;
+}
+
+body.ai-chat-open main {
+    z-index: 10000;
 }
 
 @keyframes ai-chat-overlay-in {

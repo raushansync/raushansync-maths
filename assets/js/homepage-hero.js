@@ -166,7 +166,8 @@
         }
 
         if (elements.title) {
-            elements.title.classList.remove('home-learning-title--typing');
+            elements.title.classList.remove('home-learning-title--fading');
+            elements.title.style.opacity = '';
         }
     }
 
@@ -212,54 +213,32 @@
         }
 
         const quoteText = typeof text === 'string' ? text : '';
-        const typingToken = ++state.quoteTypingToken;
+        const fadeToken = ++state.quoteTypingToken;
 
         if (state.quoteTypingTimerId !== null) {
             window.clearTimeout(state.quoteTypingTimerId);
             state.quoteTypingTimerId = null;
         }
 
-        elements.title.classList.add('home-learning-title--typing');
+        elements.title.classList.add('home-learning-title--fading');
 
         if (shouldReduceMotion()) {
             elements.title.textContent = quoteText;
+            elements.title.style.opacity = '1';
             return;
         }
 
-        const characters = Array.from(quoteText);
-
-        if (!characters.length) {
-            elements.title.textContent = '';
-            return;
-        }
-
-        const typeNextCharacter = (index) => {
-            if (state.quoteTypingToken !== typingToken) {
-                return;
-            }
-
-            elements.title.textContent = characters.slice(0, index + 1).join('');
-
-            if (index + 1 >= characters.length) {
-                state.quoteTypingTimerId = null;
-                return;
-            }
-
-            state.quoteTypingTimerId = window.setTimeout(() => {
-                typeNextCharacter(index + 1);
-            }, getTypingDelay(characters[index]));
-        };
-
-        elements.title.textContent = characters[0];
-
-        if (characters.length === 1) {
-            state.quoteTypingTimerId = null;
-            return;
-        }
+        elements.title.style.opacity = '0';
 
         state.quoteTypingTimerId = window.setTimeout(() => {
-            typeNextCharacter(1);
-        }, getTypingDelay(characters[0]));
+            if (state.quoteTypingToken !== fadeToken) {
+                return;
+            }
+
+            elements.title.textContent = quoteText;
+            elements.title.style.opacity = '1';
+            state.quoteTypingTimerId = null;
+        }, 240);
     }
 
     function startQuoteRotation(trackType, initialQuote) {
