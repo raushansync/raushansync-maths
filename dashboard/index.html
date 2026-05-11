@@ -15,7 +15,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>My Dashboard - RaushanSYNC Maths</title>
+    <title>My Dashboard - RaushanSync Maths</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1009,10 +1009,363 @@
             color: var(--secondary-text-color);
             text-align: center;
         }
+
+        /* Dashboard observatory theme: matches the homepage visual language. */
+        #science-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body.dashboard-page {
+            position: relative;
+            background: linear-gradient(145deg, #eaf2ff 0%, #f8fbff 44%, #e6f0ff 100%);
+            min-height: 100vh;
+        }
+
+        .dark-mode body.dashboard-page {
+            background: linear-gradient(145deg, #020c1b 0%, #030e22 50%, #020a17 100%);
+        }
+
+        body.dashboard-page::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(37, 99, 235, 0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.055) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dark-mode body.dashboard-page::after {
+            background-image:
+                linear-gradient(rgba(96, 165, 250, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(96, 165, 250, 0.045) 1px, transparent 1px);
+        }
+
+        body.dashboard-page main {
+            position: relative;
+        }
+
+        body.dashboard-page .header {
+            z-index: 20;
+        }
+
+        body.dashboard-page main {
+            z-index: 1;
+        }
+
+        body.dashboard-page .modal,
+        body.dashboard-page .ai-chat-modal {
+            z-index: 1000;
+        }
+
+        body.dashboard-page main {
+            padding-top: calc(var(--header-height) + 0.85rem);
+        }
+
+        body.dashboard-page #dashboardContent {
+            animation: dashboardFadeUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes dashboardFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.dashboard-page .dashboard-header {
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.8rem;
+            margin-bottom: 1.7rem;
+            padding: 1.45rem;
+            border: 1px solid rgba(59, 130, 246, 0.18);
+            border-radius: 14px;
+            background:
+                radial-gradient(circle at top right, rgba(6, 182, 212, 0.18), transparent 42%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.82));
+            box-shadow:
+                0 18px 44px rgba(15, 23, 42, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .dark-mode body.dashboard-page .dashboard-header {
+            border-color: rgba(96, 165, 250, 0.16);
+            background:
+                radial-gradient(circle at top right, rgba(14, 165, 233, 0.16), transparent 42%),
+                linear-gradient(135deg, rgba(8, 20, 42, 0.82), rgba(15, 23, 42, 0.66));
+            box-shadow:
+                0 18px 44px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.055);
+        }
+
+        body.dashboard-page .dashboard-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 1.45rem;
+            right: 1.45rem;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.68), rgba(6, 182, 212, 0.55), transparent);
+        }
+
+        .dashboard-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-bottom: 0.75rem;
+            padding: 0.3rem 0.82rem;
+            border: 1px solid rgba(37, 99, 235, 0.28);
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.1);
+            color: #1d4ed8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .dark-mode .dashboard-eyebrow {
+            border-color: rgba(96, 165, 250, 0.22);
+            background: rgba(96, 165, 250, 0.1);
+            color: #93c5fd;
+        }
+
+        .dashboard-eyebrow-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.7);
+        }
+
+        body.dashboard-page .dashboard-header h1 {
+            max-width: 780px;
+            margin-bottom: 0.45rem;
+            font-size: clamp(1.55rem, 2.4vw, 2.35rem);
+            line-height: 1.13;
+            letter-spacing: 0;
+        }
+
+        body.dashboard-page .dashboard-header p {
+            max-width: 56ch;
+            color: #475569;
+            line-height: 1.65;
+        }
+
+        .dark-mode body.dashboard-page .dashboard-header p {
+            color: #b8c4d6;
+        }
+
+        body.dashboard-page .stats-grid {
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        body.dashboard-page .stat-card,
+        body.dashboard-page .section,
+        body.dashboard-page .modal-content {
+            border: 1px solid rgba(59, 130, 246, 0.16);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow:
+                0 14px 34px rgba(15, 23, 42, 0.09),
+                inset 0 1px 0 rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .dark-mode body.dashboard-page .stat-card,
+        .dark-mode body.dashboard-page .section,
+        .dark-mode body.dashboard-page .modal-content {
+            border-color: rgba(96, 165, 250, 0.14);
+            background: rgba(8, 20, 42, 0.72);
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        body.dashboard-page .stat-card {
+            overflow: visible;
+            border-left: 0;
+            border-top: 3px solid #3b82f6;
+        }
+
+        body.dashboard-page .stat-card.accent-1 {
+            border-top-color: #10b981;
+        }
+
+        body.dashboard-page .stat-card.accent-2 {
+            border-top-color: #06b6d4;
+        }
+
+        body.dashboard-page .stat-card.accent-3 {
+            border-top-color: #10b981;
+        }
+
+        .dark-mode body.dashboard-page .stat-card.accent-1 {
+            border-color: rgba(96, 165, 250, 0.14);
+            border-top-color: #34d399;
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.22),
+                inset 0 1px 0 rgba(52, 211, 153, 0.16);
+        }
+
+        body.dashboard-page .stat-card:hover,
+        body.dashboard-page .stat-card.palette-active {
+            transform: translateY(-3px);
+            border-color: rgba(59, 130, 246, 0.32);
+            box-shadow:
+                0 18px 38px rgba(59, 130, 246, 0.14),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .dark-mode body.dashboard-page .stat-card:hover,
+        .dark-mode body.dashboard-page .stat-card.palette-active {
+            border-color: rgba(147, 197, 253, 0.28);
+            box-shadow:
+                0 18px 38px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(147, 197, 253, 0.08);
+        }
+
+        .dark-mode body.dashboard-page .stat-card.accent-1:hover,
+        .dark-mode body.dashboard-page .stat-card.accent-1.palette-active {
+            border-color: rgba(96, 165, 250, 0.18);
+            border-top-color: #34d399;
+            box-shadow:
+                0 18px 38px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(52, 211, 153, 0.2);
+        }
+
+        body.dashboard-page .stat-label,
+        body.dashboard-page .profile-label {
+            letter-spacing: 0.08em;
+        }
+
+        body.dashboard-page .stat-value {
+            background: linear-gradient(125deg, #1d4ed8 0%, #3b82f6 52%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dark-mode body.dashboard-page .stat-card.accent-2 .stat-value,
+        .dark-mode body.dashboard-page .stat-card.accent-3 .stat-value {
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            -webkit-text-fill-color: currentColor;
+        }
+
+        .dark-mode body.dashboard-page .stat-card.accent-2 .stat-value {
+            color: #67e8f9;
+        }
+
+        .dark-mode body.dashboard-page .stat-card.accent-3 .stat-value {
+            color: #6ee7b7;
+        }
+
+        body.dashboard-page .section-title {
+            font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+            letter-spacing: 0;
+        }
+
+        body.dashboard-page .profile-item {
+            border-color: rgba(59, 130, 246, 0.14);
+            background:
+                linear-gradient(145deg, rgba(239, 246, 255, 0.92), rgba(255, 255, 255, 0.78));
+        }
+
+        .dark-mode body.dashboard-page .profile-item {
+            border-color: rgba(96, 165, 250, 0.12);
+            background: rgba(15, 23, 42, 0.58);
+        }
+
+        body.dashboard-page .btn-primary {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 52%, #0ea5e9 100%);
+            background-size: 200% 200%;
+            box-shadow:
+                0 10px 24px rgba(59, 130, 246, 0.26),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: transform 0.22s ease, box-shadow 0.25s ease, filter 0.2s ease;
+        }
+
+        body.dashboard-page .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.07);
+            opacity: 1;
+            box-shadow:
+                0 14px 32px rgba(59, 130, 246, 0.42),
+                0 4px 8px rgba(59, 130, 246, 0.18);
+        }
+
+        body.dashboard-page .btn-secondary {
+            border: 1px solid rgba(37, 99, 235, 0.32);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            color: #1d4ed8;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .dark-mode body.dashboard-page .btn-secondary {
+            border-color: rgba(96, 165, 250, 0.26);
+            background: rgba(15, 23, 42, 0.68);
+            color: #93c5fd;
+        }
+
+        body.dashboard-page .dashboard-palette {
+            border-color: rgba(59, 130, 246, 0.18);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.16);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .dark-mode body.dashboard-page .dashboard-palette {
+            border-color: rgba(96, 165, 250, 0.16);
+            background: rgba(8, 20, 42, 0.96);
+        }
+
+        body.dashboard-page .critical-settings {
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        @media (max-width: 768px) {
+            body.dashboard-page main {
+                padding-top: calc(var(--header-height) + 1rem);
+            }
+
+            body.dashboard-page .dashboard-header {
+                padding: 1.15rem;
+                margin-top: 0.35rem;
+            }
+
+            body.dashboard-page .dashboard-header h1 {
+                font-size: 1.45rem;
+            }
+        }
     </style>
     <link rel="manifest" href="/manifest.json">
 </head>
-<body>
+<body class="dashboard-page">
+    <canvas id="science-canvas" aria-hidden="true"></canvas>
     <header class="header">
         <div class="container header-container">
             <a href="/" class="logo">RaushanSYNC Maths</a>
@@ -1037,6 +1390,10 @@
 
             <div id="dashboardContent" style="display: none;">
                 <div class="dashboard-header">
+                    <div class="dashboard-eyebrow">
+                        <span class="dashboard-eyebrow-dot" aria-hidden="true"></span>
+                        Learning Observatory
+                    </div>
                     <h1 id="welcomeTitle">Welcome!</h1>
                     <p>Manage your learning journey here.</p>
                 </div>
@@ -1904,22 +2261,107 @@
             }).join(' - ');
         }
 
+        const progressPathValidationCache = new Map();
+
+        function getProgressUrl(itemPath) {
+            if (!itemPath || typeof itemPath !== 'string') {
+                return null;
+            }
+
+            try {
+                const url = new URL(itemPath, window.location.origin);
+                return url.origin === window.location.origin ? url : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function isTrackableSciencePath(url) {
+            if (!url) return false;
+
+            const pathname = url.pathname || '/';
+            return [
+                '/notes/',
+                '/practice/',
+                '/practice-advanced/',
+                '/practice-solution/',
+                '/video-lessons/'
+            ].some(prefix => pathname === prefix.slice(0, -1) || pathname.startsWith(prefix));
+        }
+
+        function getSafeProgressHref(itemPath) {
+            const url = getProgressUrl(itemPath);
+            if (!url || !isTrackableSciencePath(url)) {
+                return '';
+            }
+
+            return url.pathname + url.search + url.hash;
+        }
+
+        function isSciencePathFallback(url) {
+            return /^\/(?:notes|practice|practice-advanced|practice-solution|video-lessons)\/class\d{2}\/chapter\d+/i.test(url.pathname || '');
+        }
+
+        async function pathExistsOnScienceSite(itemPath) {
+            const url = getProgressUrl(itemPath);
+            if (!url || !isTrackableSciencePath(url)) {
+                return false;
+            }
+
+            url.hash = '';
+            const cacheKey = url.pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '') + url.search;
+            if (progressPathValidationCache.has(cacheKey)) {
+                return progressPathValidationCache.get(cacheKey);
+            }
+
+            try {
+                const response = await fetch(url.href, {
+                    method: 'HEAD',
+                    cache: 'no-store',
+                    credentials: 'same-origin'
+                });
+                const exists = response.ok;
+                progressPathValidationCache.set(cacheKey, exists);
+                return exists;
+            } catch (error) {
+                const exists = isSciencePathFallback(url);
+                progressPathValidationCache.set(cacheKey, exists);
+                return exists;
+            }
+        }
+
+        async function filterScienceRecentProgress(rows, limit) {
+            const filtered = [];
+
+            for (const item of rows || []) {
+                if (filtered.length >= limit) break;
+
+                if (await pathExistsOnScienceSite(item.item_path)) {
+                    const safeHref = getSafeProgressHref(item.item_path);
+                    if (safeHref) {
+                        filtered.push({ ...item, item_path: safeHref });
+                    }
+                }
+            }
+
+            return filtered;
+        }
+
         async function fetchRecentProgress(itemType, limit = 3) {
             if (!window.supabaseClient || !currentUser) return [];
             try {
-                const site = window.getCurrentSite ? window.getCurrentSite() : window.location.hostname;
+                const queryLimit = Math.max(limit * 25, 75);
                 const { data, error } = await window.supabaseClient
                     .from('progress')
-                    .select('item_path, updated_at')
+                    .select('item_path, updated_at, site')
                     .eq('user_id', currentUser.id)
-                    .eq('site', site)
                     .eq('item_type', itemType)
                     .eq('completed', true)
                     .order('updated_at', { ascending: false })
-                    .limit(limit);
+                    .limit(queryLimit);
 
                 if (error) throw error;
-                return data || [];
+                return await filterScienceRecentProgress(data, limit);
             } catch (err) {
                 console.error("Error fetching recent " + itemType + ":", err);
                 return [];
@@ -2247,6 +2689,94 @@
                 saveBtn.textContent = originalText;
             }
         }
+    </script>
+
+    <script>
+        (function () {
+            var canvas = document.getElementById('science-canvas');
+            if (!canvas || !canvas.getContext) return;
+
+            var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced) return;
+
+            var ctx = canvas.getContext('2d');
+            var width;
+            var height;
+            var points;
+            var count = 52;
+            var linkDistance = 128;
+            var resizeTimer;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            function spawn() {
+                points = [];
+                for (var i = 0; i < count; i += 1) {
+                    points.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.28,
+                        vy: (Math.random() - 0.5) * 0.28,
+                        r: Math.random() * 1.55 + 0.7
+                    });
+                }
+            }
+
+            function step() {
+                ctx.clearRect(0, 0, width, height);
+
+                var dark = document.documentElement.classList.contains('dark-mode');
+                var rgb = dark ? '96,165,250' : '59,130,246';
+                var lineAlpha = dark ? 0.18 : 0.2;
+                var dotAlpha = dark ? 0.45 : 0.48;
+
+                for (var i = 0; i < count; i += 1) {
+                    var point = points[i];
+                    for (var j = i + 1; j < count; j += 1) {
+                        var other = points[j];
+                        var dx = point.x - other.x;
+                        var dy = point.y - other.y;
+                        var distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < linkDistance) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = 'rgba(' + rgb + ',' + ((1 - distance / linkDistance) * lineAlpha) + ')';
+                            ctx.lineWidth = 0.8;
+                            ctx.moveTo(point.x, point.y);
+                            ctx.lineTo(other.x, other.y);
+                            ctx.stroke();
+                        }
+                    }
+
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(' + rgb + ',' + dotAlpha + ')';
+                    ctx.arc(point.x, point.y, point.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    point.x += point.vx;
+                    point.y += point.vy;
+                    if (point.x < 0 || point.x > width) point.vx *= -1;
+                    if (point.y < 0 || point.y > height) point.vy *= -1;
+                }
+
+                requestAnimationFrame(step);
+            }
+
+            resize();
+            spawn();
+            step();
+
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    resize();
+                    spawn();
+                }, 220);
+            });
+        })();
     </script>
 
     <script>
