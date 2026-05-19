@@ -284,6 +284,31 @@
     <script src="/assets/js/auth-guard.js"></script>
 
     <script>
+        function getSignupRedirectPath() {
+            const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+
+            if (redirectParam && typeof window.getSafeRedirectPath === "function") {
+                return window.getSafeRedirectPath(redirectParam, "/dashboard");
+            }
+
+            return "/dashboard";
+        }
+
+        function updateLoginRedirectLinks() {
+            const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+
+            if (!redirectParam) {
+                return;
+            }
+
+            const loginUrl = new URL("/login", window.location.origin);
+            loginUrl.searchParams.set("redirect", getSignupRedirectPath());
+
+            document.querySelectorAll('a[href="/login"]').forEach(link => {
+                link.href = `${loginUrl.pathname}${loginUrl.search}`;
+            });
+        }
+
         async function handleSignup(e) {
             e.preventDefault();
             const fullName = document.getElementById("fullName").value.trim();
@@ -325,10 +350,7 @@
             errorDiv.classList.remove("show");
 
             try {
-                const redirectParam = new URLSearchParams(window.location.search).get("redirect");
-                const safeDest = redirectParam && typeof window.getSafeRedirectPath === "function"
-                    ? window.getSafeRedirectPath(redirectParam, "/dashboard")
-                    : "/dashboard";
+                const safeDest = getSignupRedirectPath();
 
                 const { data, error } = await window.supabaseClient.auth.signUp({
                     email,
@@ -375,7 +397,11 @@
                     } catch (syncErr) {
                         window.logEvent("Profile sync failed during signup", { error: syncErr });
                     }
-                    window.location.replace("/login?message=check-email");
+
+                    const loginUrl = new URL("/login", window.location.origin);
+                    loginUrl.searchParams.set("message", "check-email");
+                    loginUrl.searchParams.set("redirect", safeDest);
+                    window.location.replace(`${loginUrl.pathname}${loginUrl.search}`);
                 }
             } catch (err) {
                 errorDiv.textContent = "An error occurred. Please try again.";
@@ -412,6 +438,7 @@
         });
 
         document.getElementById("signupForm").addEventListener("submit", handleSignup);
+        updateLoginRedirectLinks();
 
         document.getElementById("googleSignupBtn").addEventListener("click", async () => {
             const errorDiv = document.getElementById("errorMessage");
@@ -421,7 +448,7 @@
                 const { error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: "google",
                     options: {
-                        redirectTo: window.location.origin + "/dashboard",
+                        redirectTo: window.location.origin + getSignupRedirectPath(),
                         queryParams: {
                             prompt: "select_account"
                         }

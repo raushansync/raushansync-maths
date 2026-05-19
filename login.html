@@ -232,6 +232,33 @@
     <script src="/assets/js/auth-guard.js"></script>
 
     <script>
+        function getLoginRedirectPath() {
+            if (typeof window.getPostAuthRedirectPath === "function") {
+                return window.getPostAuthRedirectPath("/dashboard");
+            }
+
+            return "/dashboard";
+        }
+
+        function updateSignupRedirectLinks() {
+            const params = new URLSearchParams(window.location.search);
+            const redirectParam = params.get("redirect");
+
+            if (!redirectParam) {
+                return;
+            }
+
+            const safeRedirect = typeof window.getSafeRedirectPath === "function"
+                ? window.getSafeRedirectPath(redirectParam, "/dashboard")
+                : redirectParam;
+            const signupUrl = new URL("/signup", window.location.origin);
+            signupUrl.searchParams.set("redirect", safeRedirect);
+
+            document.querySelectorAll('a[href="/signup"]').forEach(link => {
+                link.href = `${signupUrl.pathname}${signupUrl.search}`;
+            });
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById("email").value.trim();
@@ -280,7 +307,7 @@
                     if (window.redirectAuthenticatedUser) {
                         await window.redirectAuthenticatedUser("/dashboard");
                     } else {
-                        window.location.replace("/dashboard");
+                        window.location.replace(getLoginRedirectPath());
                     }
                 }
             } catch (err) {
@@ -326,12 +353,7 @@
                 redirectInfo.classList.add("show");
             }
 
-            if (params.get("redirect")) {
-                const signupLink = document.getElementById("signup-link");
-                if (signupLink) {
-                    signupLink.href = "/signup?redirect=" + encodeURIComponent(params.get("redirect"));
-                }
-            }
+            updateSignupRedirectLinks();
         });
 
         document.getElementById("googleLoginBtn").addEventListener("click", async () => {
@@ -342,7 +364,7 @@
                 const { error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: "google",
                     options: {
-                        redirectTo: window.location.origin + "/dashboard",
+                        redirectTo: window.location.origin + getLoginRedirectPath(),
                         queryParams: {
                             prompt: "select_account"
                         }

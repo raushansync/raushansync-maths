@@ -11,6 +11,74 @@
 window.ProgressTracker = (() => {
     const startTimes = new Map();
 
+    let progressCache = null;
+    let progressCachePromise = null;
+    let progressCacheSite = null;
+    let progressCacheUserId = null;
+
+    function resetProgressCache() {
+        progressCache = null;
+        progressCachePromise = null;
+        progressCacheSite = null;
+        progressCacheUserId = null;
+    }
+
+    async function ensureProgressCache(site, session) {
+        const userId = session?.user?.id;
+        if (!site || !userId) {
+            resetProgressCache();
+            return null;
+        }
+
+        if (progressCache && progressCacheSite === site && progressCacheUserId === userId) {
+            return progressCache;
+        }
+
+        if (progressCachePromise && progressCacheSite === site && progressCacheUserId === userId) {
+            return progressCachePromise;
+        }
+
+        resetProgressCache();
+        progressCacheSite = site;
+        progressCacheUserId = userId;
+
+        progressCachePromise = (async () => {
+            try {
+                if (!window.supabaseClient) return null;
+
+                const { data, error } = await window.supabaseClient
+                    .from('progress')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('site', site);
+
+                if (error) {
+                    return null;
+                }
+
+                const map = new Map();
+                (data || []).forEach(row => {
+                    map.set(row.item_path, row);
+                });
+                return map;
+            } catch (err) {
+                return null;
+            }
+        })();
+
+        const result = await progressCachePromise;
+        if (progressCacheSite !== site || progressCacheUserId !== userId) {
+            return null;
+        }
+
+        if (result) {
+            progressCache = result;
+        } else {
+            resetProgressCache();
+        }
+        return result;
+    }
+
     function sanitizeText(value, maxLength) {
         if (typeof value !== 'string') {
             return null;
@@ -301,6 +369,13 @@ window.ProgressTracker = (() => {
                     ? window.normalizePath(itemPath)
                     : normalizeQuizUrl(itemPath);
 
+                // Use bulk cache if possible
+                await ensureProgressCache(site, session);
+                if (progressCache) {
+                    return progressCache.get(normalizedPath) || null;
+                }
+
+                // Fallback to single fetch if bulk fails
                 // Use limit(1) to avoid PostgREST 406 when multiple rows exist
                 const { data: rows, error } = await window.supabaseClient
                     .from('progress')
@@ -356,6 +431,14 @@ window.ProgressTracker = (() => {
                     return false;
                 }
 
+                // Update local cache to keep it in sync
+                if (progressCache && progressCacheSite === site && progressCacheUserId === session.user.id) {
+                    progressCache.set(normalizedPath, {
+                        ...progressData,
+                        completed: completed
+                    });
+                }
+
                 window.logEvent('Progress updated');
                 return true;
             } catch (error) {
@@ -381,6 +464,10 @@ window.ProgressTracker = (() => {
 
         async markCompleted(site, itemPath, itemType) {
             return await this.setProgress(site, itemPath, itemType, true);
+        },
+
+        clearProgressCache() {
+            resetProgressCache();
         },
 
         async loadPageProgress() {
@@ -478,7 +565,7 @@ window.ProgressTracker = (() => {
                     return null;
                 }
 
-                return (rows && rows[0] && rows[0].score) ? rows[0].score : null;
+                return (rows && rows[0] && Number.isFinite(rows[0].score)) ? rows[0].score : null;
             } catch (error) {
                 window.logEvent('Error fetching practice score', { error });
                 return null;
@@ -522,5 +609,13 @@ window.ProgressTracker = (() => {
         }
     };
 })();
+
+if (window.addEventListener) {
+    window.addEventListener('rs:auth-state-change', () => {
+        if (window.ProgressTracker && typeof window.ProgressTracker.clearProgressCache === 'function') {
+            window.ProgressTracker.clearProgressCache();
+        }
+    });
+}
 
 window.logEvent('Progress tracker loaded');

@@ -2478,6 +2478,23 @@ body:not(:has(.header--hidden)) .breadcrumb {
     }
 }
 
+/* Card Header Flex - positions status and tick on same line */
+.card-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Card Tick Container - positions tick on the right */
+.card-tick-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .progress-tick {

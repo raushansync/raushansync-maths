@@ -19,12 +19,92 @@ window.TickManager = (() => {
     };
 
     const TICK_SYMBOLS = {
-        completed: '✓',
-        incomplete: '○'
+        completed: '\u2713',
+        incomplete: '\u25CB'
     };
 
-    // DOM element cache
+    // Progress-key -> Set<HTMLElement>. Multiple cards may legitimately point
+    // to the same item, so each container owns its own button while states sync.
     const tickElements = new Map();
+    const containerInitPromises = new WeakMap();
+    let tickDomCounter = 0;
+
+    function safeLog(eventName, eventData = {}) {
+        if (typeof window.logEvent === 'function') {
+            window.logEvent(eventName, eventData);
+        }
+    }
+
+    function normalizeTickPath(itemPath) {
+        if (window.normalizePath && typeof window.normalizePath === 'function') {
+            return window.normalizePath(itemPath);
+        }
+
+        try {
+            const url = new URL(itemPath || window.location.pathname, window.location.origin);
+            if (url.origin !== window.location.origin) {
+                return window.location.pathname + window.location.search + window.location.hash;
+            }
+            return `${url.pathname}${url.search}${url.hash}`.slice(0, 500);
+        } catch (error) {
+            return window.location.pathname + window.location.search + window.location.hash;
+        }
+    }
+
+    function createTickId(site, itemPath) {
+        return `${site}-${normalizeTickPath(itemPath)}`.replace(/[^\w-]/g, '_');
+    }
+
+    function getDirectTickChildren(container) {
+        return Array.from(container.children).filter(child => child.classList?.contains('progress-tick'));
+    }
+
+    function registerTick(tickId, tick) {
+        if (!tickElements.has(tickId)) {
+            tickElements.set(tickId, new Set());
+        }
+        tickElements.get(tickId).add(tick);
+    }
+
+    function unregisterTick(tickId, tick) {
+        const matchingTicks = tickElements.get(tickId);
+        if (!matchingTicks) return;
+
+        matchingTicks.delete(tick);
+        if (!matchingTicks.size) {
+            tickElements.delete(tickId);
+        }
+    }
+
+    function updateMatchingTicks(tickElement, newState) {
+        const tickId = tickElement.dataset.tickId;
+        const matchingTicks = tickElements.get(tickId);
+
+        if (!matchingTicks) {
+            updateTickState(tickElement, newState);
+            return;
+        }
+
+        for (const tick of matchingTicks) {
+            if (tick.isConnected) {
+                updateTickState(tick, newState);
+            } else {
+                matchingTicks.delete(tick);
+            }
+        }
+
+        if (!matchingTicks.size) {
+            tickElements.delete(tickId);
+        }
+    }
+
+    function getCurrentTickState(tickElement) {
+        if (tickElement.classList.contains(TICK_STATES.COMPLETED)) {
+            return TICK_STATES.COMPLETED;
+        }
+
+        return TICK_STATES.INCOMPLETE;
+    }
 
     /**
      * Create a tick element
@@ -35,10 +115,10 @@ window.TickManager = (() => {
     function createTickElement(id, state = TICK_STATES.INCOMPLETE) {
         const tick = document.createElement('button');
         tick.className = `progress-tick ${state}`;
-        tick.id = `tick-${id}`;
+        tick.id = `tick-${id}-${tickDomCounter++}`;
         tick.setAttribute('aria-label', state === TICK_STATES.COMPLETED ? 'Mark as incomplete' : 'Mark as complete');
         tick.setAttribute('type', 'button');
-        tick.textContent = TICK_SYMBOLS[state] || '○';
+        tick.textContent = TICK_SYMBOLS[state] || '\u25CB';
         tick.dataset.tickId = id;
         
         return tick;
@@ -59,7 +139,7 @@ window.TickManager = (() => {
         tickElement.classList.add(newState);
 
         // Update symbol
-        tickElement.textContent = TICK_SYMBOLS[newState] || '○';
+        tickElement.textContent = TICK_SYMBOLS[newState] || '\u25CB';
 
         // Update aria label
         if (newState === TICK_STATES.COMPLETED) {
@@ -81,7 +161,7 @@ window.TickManager = (() => {
         const tickId = tickElement.dataset.tickId;
 
         if (!tickId) {
-            window.logEvent('Tick error: ID not found on element');
+            safeLog('Tick error: ID not found on element');
             return;
         }
 
@@ -97,7 +177,8 @@ window.TickManager = (() => {
         }
 
         // Show loading state
-        updateTickState(tickElement, TICK_STATES.LOADING);
+        const previousState = getCurrentTickState(tickElement);
+        updateMatchingTicks(tickElement, TICK_STATES.LOADING);
 
         try {
             // Get progress tracker
@@ -122,7 +203,7 @@ window.TickManager = (() => {
             const newState = progress?.completed ? TICK_STATES.COMPLETED : TICK_STATES.INCOMPLETE;
 
             // Update UI
-            updateTickState(tickElement, newState);
+            updateMatchingTicks(tickElement, newState);
 
             // Trigger dashboard update if function exists
             if (window.updateProgressDisplay && typeof window.updateProgressDisplay === 'function') {
@@ -130,21 +211,18 @@ window.TickManager = (() => {
             }
 
             // Log success
-            window.logEvent('Progress tick toggled', { site, itemPath, itemType, completed: progress?.completed });
+            safeLog('Progress tick toggled', { site, itemPath, itemType, completed: progress?.completed });
 
         } catch (error) {
             console.error('Error toggling tick:', error);
-            updateTickState(tickElement, TICK_STATES.ERROR);
+            updateMatchingTicks(tickElement, TICK_STATES.ERROR);
             
             // Revert to previous state after delay
             setTimeout(() => {
-                const currentState = tickElement.classList.contains(TICK_STATES.COMPLETED) 
-                    ? TICK_STATES.INCOMPLETE 
-                    : TICK_STATES.COMPLETED;
-                updateTickState(tickElement, currentState);
+                updateMatchingTicks(tickElement, previousState);
             }, 2000);
 
-            window.logEvent('Error toggling tick', { error: error.message });
+            safeLog('Error toggling tick', { error: error.message });
         }
     }
 
@@ -160,82 +238,116 @@ window.TickManager = (() => {
          *   - className: additional CSS classes
          */
         async initTick(containerId, options = {}) {
+            let container = null;
             try {
-                const container = document.getElementById(containerId);
+                container = document.getElementById(containerId);
                 if (!container) {
-                    window.logEvent('Tick error: Container not found', { containerId });
+                    safeLog('Tick error: Container not found', { containerId });
                     return null;
                 }
 
-                // Set defaults
-                const site = options.site || (window.getCurrentSite ? window.getCurrentSite() : window.location.hostname);
-                const itemPath = options.itemPath || (window.getCurrentPath ? window.getCurrentPath() : window.location.pathname);
-                const itemType = options.itemType || (window.ProgressTracker ? window.ProgressTracker.detectItemType(itemPath) : 'article');
-                const position = options.position || 'inline';
-                const customClass = options.className || '';
-
-                // Generate unique ID for this tick
-                const tickId = `${site}-${itemPath}`.replace(/[^\w-]/g, '_');
-
-                // Check if already initialized
-                if (tickElements.has(tickId)) {
-                    return tickElements.get(tickId);
+                if (containerInitPromises.has(container)) {
+                    return await containerInitPromises.get(container);
                 }
 
-                // Create tick element
-                let initialState = TICK_STATES.INCOMPLETE;
-                let tick = createTickElement(tickId, initialState);
+                const initPromise = (async () => {
+                    container.dataset.tickInitialized = 'initializing';
 
-                // Set data attributes
-                tick.dataset.site = site;
-                tick.dataset.itemPath = itemPath;
-                tick.dataset.itemType = itemType;
+                    // Set defaults
+                    const site = options.site || (window.getCurrentSite ? window.getCurrentSite() : window.location.hostname);
+                    const itemPath = normalizeTickPath(options.itemPath || (window.getCurrentPath ? window.getCurrentPath() : window.location.pathname));
+                    const itemType = options.itemType || (window.ProgressTracker ? window.ProgressTracker.detectItemType(itemPath) : 'article');
+                    const position = options.position || 'inline';
+                    const customClass = options.className || '';
 
-                // Add custom classes
-                if (customClass) {
-                    tick.classList.add(customClass);
-                }
+                    // Generate a stable progress key for this tick.
+                    const tickId = createTickId(site, itemPath);
 
-                // Add position-specific classes
-                if (position === 'header') {
-                    tick.classList.add('page-header-tick');
-                } else if (position === 'section') {
-                    tick.classList.add('section-tick');
-                } else if (position === 'item') {
-                    tick.classList.add('item-tick');
-                }
-
-                // Add click handler
-                tick.addEventListener('click', handleTickClick);
-
-                // Cache the element immediately to avoid duplicate creation
-                // when multiple init calls run concurrently (race condition).
-                if (!tickElements.has(tickId)) {
-                    tickElements.set(tickId, tick);
-                }
-
-                // Load current progress state (async)
-                if (window.isUserLoggedIn && window.isUserLoggedIn()) {
-                    if (window.ProgressTracker) {
-                        const progress = await window.ProgressTracker.getProgress(site, itemPath);
-                        if (progress?.completed) {
-                            initialState = TICK_STATES.COMPLETED;
-                            updateTickState(tick, initialState);
+                    // Keep only one direct tick button per container. This repairs pages
+                    // that were partially initialized by an older/racing call.
+                    let tick = null;
+                    for (const existingTick of getDirectTickChildren(container)) {
+                        if (!tick && existingTick.dataset.tickId === tickId) {
+                            tick = existingTick;
+                            continue;
                         }
+
+                        unregisterTick(existingTick.dataset.tickId, existingTick);
+                        existingTick.remove();
                     }
-                }
 
-                // Append to container if not already present
-                if (!container.contains(tick)) {
-                    container.appendChild(tick);
-                }
+                    // Create tick element
+                    let initialState = TICK_STATES.INCOMPLETE;
+                    if (!tick) {
+                        tick = createTickElement(tickId, initialState);
+                    } else {
+                        tick.dataset.tickId = tickId;
+                    }
 
-                return tick;
+                    // Set data attributes
+                    tick.dataset.site = site;
+                    tick.dataset.itemPath = itemPath;
+                    tick.dataset.itemType = itemType;
+
+                    // Add custom classes
+                    if (customClass) {
+                        tick.classList.add(...customClass.split(/\s+/).filter(Boolean));
+                    }
+
+                    // Add position-specific classes
+                    tick.classList.remove('page-header-tick', 'section-tick', 'item-tick');
+                    if (position === 'header') {
+                        tick.classList.add('page-header-tick');
+                    } else if (position === 'section') {
+                        tick.classList.add('section-tick');
+                    } else if (position === 'item') {
+                        tick.classList.add('item-tick');
+                    }
+
+                    // Add click handler once.
+                    if (tick.dataset.tickClickBound !== 'true') {
+                        tick.addEventListener('click', handleTickClick);
+                        tick.dataset.tickClickBound = 'true';
+                    }
+
+                    registerTick(tickId, tick);
+
+                    // Append before async state loading so the new button is
+                    // included when matching ticks are synchronized.
+                    if (tick.parentElement !== container) {
+                        container.appendChild(tick);
+                    }
+
+                    // Load current progress state (async)
+                    if (window.isUserLoggedIn && window.isUserLoggedIn()) {
+                        if (window.ProgressTracker) {
+                            const progress = await window.ProgressTracker.getProgress(site, itemPath);
+                            initialState = progress?.completed ? TICK_STATES.COMPLETED : TICK_STATES.INCOMPLETE;
+                            updateMatchingTicks(tick, initialState);
+                        }
+                    } else {
+                        updateTickState(tick, initialState);
+                    }
+
+                    container.dataset.tickInitialized = 'true';
+                    return tick;
+                })();
+
+                containerInitPromises.set(container, initPromise);
+
+                return await initPromise;
 
             } catch (error) {
+                if (container) {
+                    delete container.dataset.tickInitialized;
+                }
                 console.error('Error initializing tick:', error);
-                window.logEvent('Tick initialization error', { error: error.message });
+                safeLog('Tick initialization error', { error: error.message });
                 return null;
+            } finally {
+                if (container) {
+                    containerInitPromises.delete(container);
+                }
             }
         },
 
@@ -246,13 +358,11 @@ window.TickManager = (() => {
         async initializePageTicks() {
             try {
                 const tickContainers = document.querySelectorAll('[data-tick-container]');
-                if (tickContainers.length === 0) {
-                    return;
-                }
-
+                
                 for (const container of tickContainers) {
-                    // Skip containers we've already initialized (idempotent)
-                    if (container.dataset.tickInitialized === 'true') {
+                    // Skip healthy containers, but repair any initialized marker
+                    // that does not actually have a rendered tick.
+                    if (container.dataset.tickInitialized === 'true' && container.querySelector('.progress-tick')) {
                         continue;
                     }
 
@@ -281,15 +391,89 @@ window.TickManager = (() => {
                     }
 
                     await this.initTick(container.id, options);
-                    // Mark container as initialized so future calls are no-ops
-                    container.dataset.tickInitialized = 'true';
                 }
 
-                window.logEvent('Page ticks initialized');
+                // NEW: Dynamically process article/practice "cards" across the hub pages
+                const cards = document.querySelectorAll('.card-grid > .card');
+                let cardCounter = 0;
+
+                for (const card of cards) {
+                    if (card.dataset.tickInitialized === 'true' && card.querySelector('.card-tick-container .progress-tick')) {
+                        continue;
+                    }
+
+                    const btn = Array.from(card.querySelectorAll('a.btn')).find(link => {
+                        const href = link.getAttribute('href');
+                        return href && !link.classList.contains('disabled') && link.getAttribute('aria-disabled') !== 'true';
+                    });
+                    const statusEl = card.querySelector('.status');
+                    
+                    if (!btn || !statusEl) continue;
+                    
+                    const href = btn.getAttribute('href');
+                    if (!href) continue;
+
+                    // Resolve the absolute path of the destination linked in the card
+                    const a = document.createElement('a');
+                    a.href = href; 
+                    const itemPath = a.pathname + a.search + a.hash;
+
+                    // Determine if it represents a practice or article based on URL
+                    const itemType = window.ProgressTracker 
+                        ? window.ProgressTracker.detectItemType(itemPath) 
+                        : (itemPath.includes('/practice/') ? 'practice' : 'article');
+
+                    let flexWrap = card.querySelector('.card-header-flex');
+                    let container = card.querySelector('.card-tick-container');
+                    
+                    if (!flexWrap) {
+                        flexWrap = document.createElement('div');
+                        flexWrap.className = 'card-header-flex';
+                        card.insertBefore(flexWrap, statusEl);
+                    }
+
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'card-tick-container';
+                        
+                        // Generate a pseudo-unique ID required by initTick logic
+                        container.id = 'card-tick-' + Date.now().toString(36) + '-' + (cardCounter++);
+                    }
+
+                    container.dataset.tickSite = window.getCurrentSite ? window.getCurrentSite() : window.location.hostname;
+                    container.dataset.tickPath = itemPath;
+                    container.dataset.tickType = itemType;
+                    container.dataset.tickPosition = 'item';
+                    container.removeAttribute('data-tick-container');
+
+                    if (statusEl.parentElement !== flexWrap) {
+                        flexWrap.insertBefore(statusEl, flexWrap.firstChild);
+                    }
+
+                    if (container.parentElement !== flexWrap) {
+                        flexWrap.appendChild(container);
+                    }
+
+                    // Spin up the tick component
+                    const tick = await this.initTick(container.id, {
+                        site: container.dataset.tickSite,
+                        itemPath: container.dataset.tickPath,
+                        itemType: container.dataset.tickType,
+                        position: 'item' // uses item-tick class which has small margins mapping
+                    });
+
+                    if (tick) {
+                        card.dataset.tickInitialized = 'true';
+                    } else {
+                        delete card.dataset.tickInitialized;
+                    }
+                }
+
+                safeLog('Page ticks initialized');
 
             } catch (error) {
                 console.error('Error initializing page ticks:', error);
-                window.logEvent('Page ticks initialization error', { error: error.message });
+                safeLog('Page ticks initialization error', { error: error.message });
             }
         },
 
@@ -297,7 +481,10 @@ window.TickManager = (() => {
          * Get tick element by ID
          */
         getTick(tickId) {
-            return tickElements.get(tickId) || null;
+            const matchingTicks = tickElements.get(tickId);
+            if (!matchingTicks) return null;
+
+            return Array.from(matchingTicks).find(tickElement => tickElement.isConnected) || null;
         },
 
         /**
@@ -305,32 +492,32 @@ window.TickManager = (() => {
          */
         async updateAllTicks() {
             try {
-                for (const [tickId, tickElement] of tickElements) {
-                    if (!tickElement.parentElement) {
-                        // Element was removed from DOM
+                for (const [tickId, matchingTicks] of tickElements) {
+                    const activeTicks = Array.from(matchingTicks).filter(tickElement => tickElement.isConnected);
+                    if (!activeTicks.length) {
                         tickElements.delete(tickId);
                         continue;
                     }
 
-                    // Skip if currently loading or in error state
-                    if (tickElement.classList.contains(TICK_STATES.LOADING) ||
-                        tickElement.classList.contains(TICK_STATES.ERROR)) {
+                    const firstTick = activeTicks[0];
+                    if (firstTick.classList.contains(TICK_STATES.LOADING) ||
+                        firstTick.classList.contains(TICK_STATES.ERROR)) {
                         continue;
                     }
 
                     // Get fresh progress
-                    const site = tickElement.dataset.site;
-                    const itemPath = tickElement.dataset.itemPath;
+                    const site = firstTick.dataset.site;
+                    const itemPath = firstTick.dataset.itemPath;
 
                     if (window.ProgressTracker) {
                         const progress = await window.ProgressTracker.getProgress(site, itemPath);
                         const newState = progress?.completed ? TICK_STATES.COMPLETED : TICK_STATES.INCOMPLETE;
-                        updateTickState(tickElement, newState);
+                        activeTicks.forEach(tickElement => updateTickState(tickElement, newState));
                     }
                 }
             } catch (error) {
                 console.error('Error updating all ticks:', error);
-                window.logEvent('Ticks update error', { error: error.message });
+                safeLog('Ticks update error', { error: error.message });
             }
         },
 
@@ -338,6 +525,20 @@ window.TickManager = (() => {
          * Clear all cached ticks (useful for logout)
          */
         clearAll() {
+            for (const matchingTicks of tickElements.values()) {
+                for (const tickElement of matchingTicks) {
+                    const container = tickElement.parentElement;
+                    const card = container?.closest?.('.card');
+
+                    tickElement.remove();
+                    if (container?.dataset) {
+                        delete container.dataset.tickInitialized;
+                    }
+                    if (card?.dataset) {
+                        delete card.dataset.tickInitialized;
+                    }
+                }
+            }
             tickElements.clear();
         },
 
@@ -359,7 +560,13 @@ if (window.addEventListener) {
     // Primary: listen for auth state change events from auth-config.js
     window.addEventListener('rs:auth-state-change', (event) => {
         const session = event.detail?.session;
-        if (!session || !session.user) {
+        if (session?.user) {
+            if (window.TickManager && typeof window.TickManager.initializePageTicks === 'function') {
+                window.TickManager.initializePageTicks().catch(error => {
+                    console.error('Error initializing ticks after login:', error);
+                });
+            }
+        } else {
             // User logged out - clear all tick UI and listeners
             if (window.TickManager && typeof window.TickManager.clearAll === 'function') {
                 window.TickManager.clearAll();

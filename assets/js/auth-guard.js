@@ -39,7 +39,7 @@
 
     const isAuthPage = () => {
         const pathname = normalizePathname(window.location.pathname);
-        const authPages = new Set(['/login', '/login/index.html', '/signup', '/signup/index.html']);
+        const authPages = new Set(['/login', '/signup']);
         return authPages.has(pathname);
     };
 
@@ -57,6 +57,32 @@
         }
     };
 
+    const getDashboardFallback = () => (
+        typeof window.AUTH_ROUTE_DASHBOARD !== 'undefined'
+            ? window.AUTH_ROUTE_DASHBOARD
+            : '/dashboard'
+    );
+
+    const redirectAuthenticatedUserToTarget = async () => {
+        const fallback = getDashboardFallback();
+
+        if (typeof window.redirectAuthenticatedUser === 'function') {
+            await window.redirectAuthenticatedUser(fallback);
+            return;
+        }
+
+        const redirectPath = typeof window.getPostAuthRedirectPath === 'function'
+            ? window.getPostAuthRedirectPath(fallback)
+            : fallback;
+
+        if (typeof window.redirectToPath === 'function') {
+            window.redirectToPath(redirectPath, { replace: true });
+            return;
+        }
+
+        window.location.replace(redirectPath);
+    };
+
     const handleAuthCheck = async () => {
         try {
             // Wait for auth to initialize
@@ -72,15 +98,8 @@
 
             // Case 2: Auth page with active session
             if (isAuthPage() && session) {
-                // Redirect authenticated user away from login/signup
-                const fallback = typeof window.AUTH_ROUTE_DASHBOARD !== 'undefined' 
-                    ? window.AUTH_ROUTE_DASHBOARD 
-                    : '/dashboard';
-                
-                if (typeof window.redirectToPath === 'function') {
-                    window.redirectToPath(fallback, { replace: true });
-                    return; // Exit to prevent further execution
-                }
+                await redirectAuthenticatedUserToTarget();
+                return; // Exit to prevent further execution
             }
 
             // Case 3: All other cases - mark auth as ready and show content

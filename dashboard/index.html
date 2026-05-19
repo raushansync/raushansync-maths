@@ -2428,7 +2428,15 @@
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 
                 if (!session) {
-                    window.location.replace("/login");
+                    const targetPath = typeof window.getCurrentPath === "function"
+                        ? window.getCurrentPath()
+                        : "/dashboard";
+
+                    if (typeof window.redirectToLogin === "function") {
+                        window.redirectToLogin(targetPath);
+                    } else {
+                        window.location.replace("/login?redirect=" + encodeURIComponent(targetPath));
+                    }
                     return;
                 }
 
