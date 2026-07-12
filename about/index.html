@@ -54,6 +54,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        body.about-page {
+            position: relative;
+            background: linear-gradient(145deg, #eaf2ff 0%, #f8fbff 44%, #e6f0ff 100%);
+        }
+
+        .dark-mode body.about-page {
+            background: linear-gradient(145deg, #020c1b 0%, #030e22 50%, #020a17 100%);
+        }
+
+        body.about-page::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(37, 99, 235, 0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.055) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dark-mode body.about-page::after {
+            background-image:
+                linear-gradient(rgba(96, 165, 250, 0.11) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(96, 165, 250, 0.11) 1px, transparent 1px);
+        }
+
+        body.about-page main,
+        body.about-page #footer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
 </head>
 
 

@@ -1011,15 +1011,6 @@
         }
 
         /* Dashboard observatory theme: matches the homepage visual language. */
-        #science-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
         body.dashboard-page {
             position: relative;
             background: linear-gradient(145deg, #eaf2ff 0%, #f8fbff 44%, #e6f0ff 100%);
@@ -1044,8 +1035,8 @@
 
         .dark-mode body.dashboard-page::after {
             background-image:
-                linear-gradient(rgba(96, 165, 250, 0.045) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(96, 165, 250, 0.045) 1px, transparent 1px);
+                linear-gradient(rgba(96, 165, 250, 0.11) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(96, 165, 250, 0.11) 1px, transparent 1px);
         }
 
         body.dashboard-page main {
@@ -1365,7 +1356,6 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body class="dashboard-page">
-    <canvas id="science-canvas" aria-hidden="true"></canvas>
     <header class="header">
         <div class="container header-container">
             <a href="/" class="logo">RaushanSYNC Maths</a>
@@ -2697,94 +2687,6 @@
                 saveBtn.textContent = originalText;
             }
         }
-    </script>
-
-    <script>
-        (function () {
-            var canvas = document.getElementById('science-canvas');
-            if (!canvas || !canvas.getContext) return;
-
-            var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (prefersReduced) return;
-
-            var ctx = canvas.getContext('2d');
-            var width;
-            var height;
-            var points;
-            var count = 52;
-            var linkDistance = 128;
-            var resizeTimer;
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-
-            function spawn() {
-                points = [];
-                for (var i = 0; i < count; i += 1) {
-                    points.push({
-                        x: Math.random() * width,
-                        y: Math.random() * height,
-                        vx: (Math.random() - 0.5) * 0.28,
-                        vy: (Math.random() - 0.5) * 0.28,
-                        r: Math.random() * 1.55 + 0.7
-                    });
-                }
-            }
-
-            function step() {
-                ctx.clearRect(0, 0, width, height);
-
-                var dark = document.documentElement.classList.contains('dark-mode');
-                var rgb = dark ? '96,165,250' : '59,130,246';
-                var lineAlpha = dark ? 0.18 : 0.2;
-                var dotAlpha = dark ? 0.45 : 0.48;
-
-                for (var i = 0; i < count; i += 1) {
-                    var point = points[i];
-                    for (var j = i + 1; j < count; j += 1) {
-                        var other = points[j];
-                        var dx = point.x - other.x;
-                        var dy = point.y - other.y;
-                        var distance = Math.sqrt(dx * dx + dy * dy);
-
-                        if (distance < linkDistance) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = 'rgba(' + rgb + ',' + ((1 - distance / linkDistance) * lineAlpha) + ')';
-                            ctx.lineWidth = 0.8;
-                            ctx.moveTo(point.x, point.y);
-                            ctx.lineTo(other.x, other.y);
-                            ctx.stroke();
-                        }
-                    }
-
-                    ctx.beginPath();
-                    ctx.fillStyle = 'rgba(' + rgb + ',' + dotAlpha + ')';
-                    ctx.arc(point.x, point.y, point.r, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    point.x += point.vx;
-                    point.y += point.vy;
-                    if (point.x < 0 || point.x > width) point.vx *= -1;
-                    if (point.y < 0 || point.y > height) point.vy *= -1;
-                }
-
-                requestAnimationFrame(step);
-            }
-
-            resize();
-            spawn();
-            step();
-
-            window.addEventListener('resize', function () {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function () {
-                    resize();
-                    spawn();
-                }, 220);
-            });
-        })();
     </script>
 
     <script>
