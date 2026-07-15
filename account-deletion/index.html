@@ -215,10 +215,6 @@
                             <li>
                                 Technical/security data: IP address, request metadata, and abuse-prevention logs.
                             </li>
-                            <li>
-                                AI chat request content used to generate responses. By current implementation, AI chat
-                                transcripts are not stored in the application database.
-                            </li>
                         </ul>
                     </section>
 
@@ -257,10 +253,6 @@
                         <ul>
                             <li>Operational and security logs may be retained for a limited time.</li>
                             <li>Provider-level backups or logs may follow their own retention windows.</li>
-                            <li>
-                                Since AI chat content is not stored in the application database in current code paths,
-                                there is typically no persistent app-level AI chat history to erase.
-                            </li>
                         </ul>
                     </section>
 

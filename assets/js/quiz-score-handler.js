@@ -206,7 +206,7 @@ window.QuizScoreHandler = (() => {
 
         // Track answers when quiz buttons are clicked
         document.querySelectorAll('.quiz-card').forEach((card, index) => {
-            const button = card.querySelector('.quiz-btn:not(.discuss-ai-btn)');
+            const button = card.querySelector('.quiz-btn');
             if (button && !button.dataset.scoreTrackingInitialized) {
                 button.dataset.scoreTrackingInitialized = 'true';
                 // Wrap with score tracking

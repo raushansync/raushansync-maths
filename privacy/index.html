@@ -17,7 +17,7 @@
     <meta property="og:site_name" content="RaushanSYNC Maths">
     <meta property="og:title" content="Privacy Policy | RaushanSYNC Maths">
     <meta property="og:description"
-        content="Learn how RaushanSYNC Maths collects, uses, and protects your data across account, progress tracking, and AI tutor features.">
+        content="Learn how RaushanSYNC Maths collects, uses, and protects your data across account and progress-tracking features..">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://maths.raushansync.com/privacy/">
 
@@ -25,7 +25,7 @@
     <meta name="twitter:site" content="@raushansync">
     <meta name="twitter:title" content="Privacy Policy | RaushanSYNC Maths">
     <meta name="twitter:description"
-        content="Privacy details for account data, progress tracking, technical logs, AI chat processing, user rights, and security controls.">
+        content="Privacy details for account data, progress tracking, technical logs, user rights, and security controls.">
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -181,7 +181,7 @@
 
                     <p class="policy-intro">
                         This Privacy Policy explains how RaushanSYNC Maths collects, uses, shares, and protects personal
-                        data when you use this website, its account system, progress features, and AI tutor features.
+                        data when you use this website, its account system, and progress features.
                     </p>
 
                     <section class="policy-section" aria-labelledby="who-we-are">
@@ -215,10 +215,6 @@
                                 Technical data: IP address, browser/device basics, request metadata, security events, and
                                 limited operational logs.
                             </li>
-                            <li>
-                                AI chat inputs/outputs: your AI chat message and context are sent for response generation,
-                                but they are not stored in our application database by our current implementation.
-                            </li>
                         </ul>
                         <p class="policy-highlight">
                             Required fields for account creation are name, email, password, and education level. Phone number
@@ -250,10 +246,6 @@
                                 contract performance.
                             </li>
                             <li>
-                                AI tutor responses and service quality:
-                                contract performance and legitimate interests.
-                            </li>
-                            <li>
                                 Security monitoring, abuse prevention, origin checks, and rate limiting:
                                 legitimate interests and, where applicable, legal obligation.
                             </li>
@@ -278,14 +270,6 @@
                             <li>
                                 GitHub Pages (GitHub):
                                 static website hosting and content delivery for this site.
-                            </li>
-                            <li>
-                                Cloudflare:
-                                AI worker execution and edge security controls for AI requests.
-                            </li>
-                            <li>
-                                Groq:
-                                AI model inference for chat responses.
                             </li>
                         </ul>
                         <p>
@@ -320,12 +304,6 @@
                                 active and removed after verified deletion requests, subject to legal and security obligations.
                             </li>
                             <li>
-                                AI chat payloads are not written to our application database by current code paths.
-                            </li>
-                            <li>
-                                AI chat history displayed in the interface is held in browser memory for the current session.
-                            </li>
-                            <li>
                                 Worker rate-limit counters are in-memory and short-lived (approximately one-minute window).
                             </li>
                             <li>
@@ -338,8 +316,8 @@
                     <section class="policy-section" aria-labelledby="transfers">
                         <h2 id="transfers">9. International Data Transfers</h2>
                         <p>
-                            Because we use global infrastructure providers (including GitHub Pages, Supabase, Cloudflare, and
-                            Groq), data may be processed outside your country. Where required, we rely on contractual and
+                            Because we use global infrastructure providers (including GitHub Pages, Supabase, Cloudflare), and
+                            service providers, data may be processed outside your country. Where required, we rely on contractual and
                             organizational safeguards provided by these processors.
                         </p>
                     </section>
@@ -384,7 +362,6 @@
                         <h2 id="security">12. Security Controls</h2>
                         <ul>
                             <li>Row Level Security (RLS) policies are applied in our Supabase database.</li>
-                            <li>AI worker requests use token verification before processing.</li>
                             <li>Origin checks are applied to worker requests.</li>
                             <li>Rate limiting is applied to reduce abuse and protect service availability.</li>
                             <li>Data transmission uses encrypted HTTPS connections in transit.</li>

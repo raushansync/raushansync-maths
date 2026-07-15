@@ -1,5 +1,5 @@
 /* RaushanSYNC Maths PWA Service Worker */
-const CACHE_VERSION = 'maths-v1.1.1.6.4.1';
+const CACHE_VERSION = 'maths-v1.1.1.6.4.2';
 const CORE_CACHE = 'rs-core-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'rs-runtime-' + CACHE_VERSION;
 const OFFLINE_URL = '/offline/';
@@ -98,7 +98,6 @@ const CORE_ASSETS = [
   '/assets/js/progress-tracker.js',
   '/assets/js/quiz-score-handler.js',
   '/assets/js/tick-manager.js',
-  '/ai-chat.js',
   '/components/nav.html',
   '/components/footer.html',
   '/components/support-cta.html',

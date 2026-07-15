@@ -8,12 +8,6 @@ const LOCAL_DEV_HOSTS = new Set([
     '127.0.0.1'
 ]);
 
-const GROQ_MODELS = {
-    quality: 'llama-3.3-70b-versatile',
-    fast: 'llama-3.1-8b-instant',
-    longContext: 'qwen/qwen3-32b'
-};
-
 const MODE_QUIZ_ASSISTANT = 'quiz-assistant';
 const MODE_STUDENT_SUPPORT = 'student-support';
 
@@ -81,6 +75,16 @@ function cleanText(value, fallback) {
     if (typeof value !== 'string') return fallback;
     const trimmed = value.trim();
     return trimmed.length ? trimmed : fallback;
+}
+
+function tryParseJson(text) {
+    if (typeof text !== 'string') return null;
+
+    try {
+        return JSON.parse(text);
+    } catch (error) {
+        return null;
+    }
 }
 
 function extractBearerToken(authorizationHeader) {
@@ -538,283 +542,6 @@ async function handleAccountDeleteRequest(request, env, origin) {
     );
 }
 
-async function handleAiTutorRequest(request, env, origin) {
-    if (request.method !== 'POST') {
-        return jsonResponse({ error: 'Method not allowed' }, 405, origin);
-    }
-
-    if (!env.GROQ_API_KEY || !env.SUPABASE_URL || !env.SUPABASE_PUBLISHABLE_KEY) {
-        return jsonResponse({ error: 'Service unavailable' }, 503, origin);
-    }
-
-    const bearerToken = extractBearerToken(request.headers.get('Authorization'));
-    if (!bearerToken) {
-        return jsonResponse(
-            { error: 'Unauthorized' },
-            401,
-            origin,
-            { 'WWW-Authenticate': 'Bearer realm="quiz-ai-tutor"' }
-        );
-    }
-
-    const authResult = await verifySupabaseAccessToken(env, bearerToken);
-    if (!authResult.ok) {
-        if (authResult.reason === 'misconfigured') {
-            return jsonResponse({ error: 'Service unavailable' }, 503, origin);
-        }
-
-        if (authResult.reason === 'unavailable') {
-            return jsonResponse({ error: 'Authentication service unavailable' }, 503, origin);
-        }
-
-        return jsonResponse(
-            { error: 'Unauthorized' },
-            401,
-            origin,
-            { 'WWW-Authenticate': 'Bearer realm="quiz-ai-tutor"' }
-        );
-    }
-
-    const clientAddress = resolveClientAddress(request);
-    const rateLimitBucket = `${authResult.userId}:${clientAddress}`;
-    const rateLimitStatus = enforceRateLimit(rateLimitBucket);
-    if (rateLimitStatus.limited) {
-        return jsonResponse(
-            { error: 'Too many requests. Please wait and try again.' },
-            429,
-            origin,
-            { 'Retry-After': String(rateLimitStatus.retryAfterSeconds) }
-        );
-    }
-
-    let body;
-    try {
-        body = await request.json();
-    } catch (error) {
-        return jsonResponse({ error: 'Invalid JSON body' }, 400, origin);
-    }
-
-    const message = cleanText(body?.message, '');
-    const context = body?.context && typeof body.context === 'object' ? body.context : {};
-    const history = normalizeHistory(body?.history);
-    const requestedModel = chooseGroqModel(body?.model);
-    const assistantMode = normalizeAssistantMode(body?.mode);
-    const learnerLevel = assistantMode === MODE_QUIZ_ASSISTANT
-        ? inferLearnerLevel(context)
-        : '';
-
-    if (!message) {
-        return jsonResponse({ error: 'Message is required' }, 400, origin);
-    }
-
-    const tutorSystemPrompt = assistantMode === MODE_STUDENT_SUPPORT
-        ? [
-            'You are RaushanSYNC AI, a smart, friendly, professional student assistant. Help students solve academic and non-academic issues with clear, practical, supportive answers.',
-            'You can support students with: academic doubts, study planning, exam preparation, career guidance, motivation, time management, college issues, personal productivity, and general student support.',
-            'Be empathetic, action-oriented, and specific.',
-            'Give clear steps, practical examples, and concise checklists when useful.',
-            'If details are missing, make one reasonable assumption and proceed with a helpful answer.',
-            'Use Markdown for formatting: **bold**, *italic*, and - or 1. lists. Do not output raw HTML.',
-            'When handling broad student concerns, prioritize practical plans and supportive guidance that can be applied immediately.'
-        ].join('\n')
-        : [
-            'You are RaushanSYNC AI, a smart, friendly, professional student assistant.',
-            'Target learner level: ' + learnerLevel + '.',
-            'You are in quiz-assistant mode for mathematics learning support.',
-            'Adapt explanation depth, vocabulary, and examples to this learner level.',
-            'Explain concepts clearly, step-by-step, using simple language.',
-            'Keep the tone encouraging and never shame mistakes.',
-            'Focus only on the provided quiz question context and related mathematics concept.',
-            'If the student is wrong, explain why and how to reason correctly.',
-            'Use short paragraphs and optional bullet points for clarity.',
-            'Use Markdown for formatting: **bold**, *italic*, and - or 1. lists. Do not output raw HTML.',
-            'Do not ask the student for clarification or additional details.',
-            'Do not ask follow-up questions unless the student explicitly requests a quiz question.',
-            'Infer missing details from the provided context and give the best direct answer in one response.',
-            'If something is unclear, state one brief assumption and continue with the explanation.'
-        ].join('\n');
-
-    const contextPrompt = [
-        'Student context:',
-        'Mode: ' + assistantMode,
-        'Topic: ' + cleanText(context.practiceTitle || context.quizTitle, 'Unknown topic'),
-        'Question: ' + cleanText(context.questionText, 'Not provided'),
-        'Student answer: ' + cleanText(context.userAnswer, 'Not provided'),
-        'Correct answer: ' + cleanText(context.correctAnswer, 'Not provided'),
-        'Explanation: ' + cleanText(context.explanation, 'Not provided'),
-        'Page URL: ' + cleanText(context.pageUrl, 'Not provided')
-    ].join('\n');
-
-    const messages = [
-        { role: 'system', content: tutorSystemPrompt },
-        { role: 'system', content: contextPrompt },
-        ...history,
-        { role: 'user', content: message }
-    ];
-
-    const modelsToTry = [requestedModel];
-    if (requestedModel === DEFAULT_GROQ_MODEL && FALLBACK_GROQ_MODEL !== DEFAULT_GROQ_MODEL) {
-        modelsToTry.push(FALLBACK_GROQ_MODEL);
-    }
-
-    for (let index = 0; index < modelsToTry.length; index += 1) {
-        const model = modelsToTry[index];
-        const canFallback = index === 0 && modelsToTry.length > 1;
-        let upstreamResponse;
-
-        try {
-            const result = await requestGroqChatCompletion(env, model, messages);
-            upstreamResponse = result.upstreamResponse;
-
-            const rawUpstreamText = result.rawUpstreamText;
-
-            if (!upstreamResponse.ok) {
-                const detail = rawUpstreamText.trim() || 'Groq returned a non-success status.';
-
-                console.error('[groq] request failed', {
-                    model: model,
-                    status: upstreamResponse.status,
-                    body: detail.slice(0, 500),
-                    userId: authResult.userId
-                });
-
-                if (canFallback && upstreamResponse.status === 429) {
-                    console.warn('[groq] falling back after 429', {
-                        fromModel: model,
-                        toModel: FALLBACK_GROQ_MODEL
-                    });
-                    continue;
-                }
-
-                return jsonResponse({
-                    error: 'AI service unavailable. Please try again shortly.'
-                }, 502, origin);
-            }
-
-            const data = tryParseJson(rawUpstreamText) || {};
-            const reply = data?.choices?.[0]?.message?.content || 'No response';
-
-            console.log('[groq] request succeeded', {
-                model: model,
-                status: upstreamResponse.status,
-                usedFallback: index > 0,
-                userId: authResult.userId
-            });
-
-            return jsonResponse({
-                reply: reply,
-                model: model,
-                provider: 'Groq'
-            }, 200, origin);
-        } catch (error) {
-            const detail = error instanceof Error ? error.message : 'Failed to reach Groq API';
-
-            console.error('[groq] network failure', {
-                model: model,
-                message: detail,
-                userId: authResult.userId
-            });
-
-            return jsonResponse({
-                error: 'AI service unavailable. Please try again shortly.'
-            }, 502, origin);
-        }
-    }
-
-    return jsonResponse({
-        error: 'AI service unavailable. Please try again shortly.'
-    }, 502, origin);
-}
-
-function inferLearnerLevel(context) {
-    const combinedText = [
-        cleanText(context?.practiceTitle, ''),
-        cleanText(context?.quizTitle, ''),
-        cleanText(context?.questionText, ''),
-        cleanText(context?.pageUrl, '')
-    ].join(' ');
-
-    const classOrGradeMatch =
-        combinedText.match(/\bclass\s*0?(\d{1,2})\b/i) ||
-        combinedText.match(/\bgrade\s*0?(\d{1,2})\b/i) ||
-        combinedText.match(/class0?(\d{1,2})/i);
-
-    if (classOrGradeMatch) {
-        const levelNumber = Number.parseInt(classOrGradeMatch[1], 10);
-        if (Number.isInteger(levelNumber) && levelNumber > 0) {
-            return 'Class ' + levelNumber;
-        }
-    }
-
-    return 'middle-school';
-}
-
-function normalizeHistory(history) {
-    if (!Array.isArray(history)) return [];
-
-    return history
-        .filter(item => item && (item.role === 'user' || item.role === 'assistant') && typeof item.content === 'string')
-        .slice(-10)
-        .map(item => ({
-            role: item.role,
-            content: item.content.trim()
-        }))
-        .filter(item => item.content.length > 0);
-}
-
-function tryParseJson(text) {
-    if (typeof text !== 'string') return null;
-    const trimmed = text.trim();
-    if (!trimmed) return null;
-
-    try {
-        return JSON.parse(trimmed);
-    } catch (error) {
-        return null;
-    }
-}
-
-function chooseGroqModel(requestedModel) {
-    const selected = cleanText(requestedModel, '');
-
-    if (!selected) return DEFAULT_GROQ_MODEL;
-
-    if (selected === 'llama3-70b-8192') return GROQ_MODELS.quality;
-    if (selected === 'llama3-8b-8192') return GROQ_MODELS.fast;
-    if (selected === 'mixtral-8x7b-32768') return GROQ_MODELS.longContext;
-
-    const allowedModels = new Set(Object.values(GROQ_MODELS));
-    return allowedModels.has(selected) ? selected : DEFAULT_GROQ_MODEL;
-}
-
-function normalizeAssistantMode(mode) {
-    const selected = cleanText(mode, '').toLowerCase();
-    if (selected === MODE_STUDENT_SUPPORT) {
-        return MODE_STUDENT_SUPPORT;
-    }
-
-    return MODE_QUIZ_ASSISTANT;
-}
-
-async function requestGroqChatCompletion(env, model, messages) {
-    const upstreamResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${env.GROQ_API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: model,
-            messages: messages,
-            temperature: 0.4,
-            max_completion_tokens: 500
-        })
-    });
-
-    const rawUpstreamText = await upstreamResponse.text();
-    return { upstreamResponse, rawUpstreamText };
-}
-
 export default {
     async fetch(request, env) {
         const origin = request.headers.get('Origin');
@@ -838,10 +565,6 @@ export default {
 
         if (pathname === ACCOUNT_DELETE_ROUTE) {
             return handleAccountDeleteRequest(request, env, origin);
-        }
-
-        if (pathname === '/' || pathname === '') {
-            return handleAiTutorRequest(request, env, origin);
         }
 
         return jsonResponse({ error: 'Not found' }, 404, origin);

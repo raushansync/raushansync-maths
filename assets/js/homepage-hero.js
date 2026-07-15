@@ -139,18 +139,6 @@
             && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
-    function getTypingDelay(character) {
-        if (!character || character === ' ') {
-            return TYPEWRITER_DEFAULT_DELAY_MS * 0.75;
-        }
-
-        if (/[.,!?;:]/.test(character)) {
-            return TYPEWRITER_PUNCTUATION_DELAY_MS;
-        }
-
-        return TYPEWRITER_DEFAULT_DELAY_MS;
-    }
-
     function clearQuoteTimers() {
         state.quoteRotationToken += 1;
         state.quoteTypingToken += 1;
@@ -281,7 +269,7 @@
             return {
                 badge: label,
                 title: getQuoteForTrack(trackType, state.currentQuote),
-                copy: 'Continue from your selected class, open your dashboard, or ask RaushanSYNC AI for guidance.'
+                copy: 'Continue from your selected class or open your dashboard to track your learning.'
             };
         }
 
@@ -290,14 +278,14 @@
             return {
                 badge: label,
                 title: getQuoteForTrack(trackType, state.currentQuote),
-                copy: 'Your preferred content opens a roadmap preview while the dashboard and AI support stay available.'
+                copy: 'Your preferred content opens a roadmap preview while the dashboard stays available.'
             };
         }
 
         return {
             badge: 'Profile incomplete',
             title: getQuoteForTrack(trackType, state.currentQuote),
-            copy: 'Choose your class or study track in the dashboard first. That unlocks Start Learning, Dashboard access, and AI support.'
+            copy: 'Choose your class or study track in the dashboard first. That unlocks Start Learning and Dashboard access.'
         };
     }
 
@@ -308,7 +296,7 @@
 
         elements.profileModal.hidden = false;
         elements.profileModal.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('ai-chat-open');
+        document.body.classList.add('profile-help-open');
 
         if (elements.profileDismiss && window.matchMedia('(pointer: fine)').matches) {
             elements.profileDismiss.focus();
@@ -322,7 +310,7 @@
 
         elements.profileModal.hidden = true;
         elements.profileModal.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('ai-chat-open');
+        document.body.classList.remove('profile-help-open');
     }
 
     function blockLearningAction() {
@@ -351,33 +339,6 @@
         }
 
         window.location.assign(path);
-    }
-
-    function askRaushanSyncAI() {
-        if (typeof window.initAIChat !== 'function') {
-            window.alert('AI assistant is not available right now. Please refresh and try again.');
-            return;
-        }
-
-        window.initAIChat(
-            {
-                practiceTitle: 'Student Support',
-                questionText: 'General learning support',
-                userAnswer: 'Home page student support',
-                correctAnswer: 'Not provided',
-                explanation: 'General academic guidance, study planning, exam preparation, and motivation.',
-                pageUrl: window.location.href
-            },
-            {
-                mode: 'student-support',
-                title: 'RaushanSYNC AI Assistant',
-                subtitle: 'Ask for help with your selected class, study routine, or general student support.',
-                assistantGreeting: 'Hi! I can help with your class, study planning, exam preparation, career guidance, and general student questions.',
-                inputLabel: 'Ask RaushanSYNC AI',
-                inputPlaceholder: 'Ask about your class, notes, practice, or study plan...',
-                showContext: false
-            }
-        );
     }
 
     async function loadProfileState() {
@@ -484,10 +445,6 @@
             elements.dashboardButton.addEventListener('click', openDashboard);
         }
 
-        if (elements.aiButton) {
-            elements.aiButton.addEventListener('click', askRaushanSyncAI);
-        }
-
         if (elements.profileClose) {
             elements.profileClose.addEventListener('click', closeProfileHelpModal);
         }
@@ -524,7 +481,6 @@
         elements.copy = document.getElementById('home-learning-copy');
         elements.startButton = document.getElementById('home-start-learning');
         elements.dashboardButton = document.getElementById('home-dashboard-link');
-        elements.aiButton = document.getElementById('home-ask-ai');
         elements.profileModal = document.getElementById('profile-help-modal');
         elements.profileClose = document.getElementById('profile-help-close');
         elements.profileDismiss = document.getElementById('profile-help-dismiss');

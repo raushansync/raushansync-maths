@@ -558,7 +558,7 @@
 
         .home-learning-actions {
             display: grid !important;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.25fr) !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             gap: 0.65rem !important;
             width: 100% !important;
         }
@@ -974,9 +974,6 @@
                                     <button type="button" id="home-dashboard-link" class="btn btn-secondary">
                                         Dashboard
                                     </button>
-                                    <button type="button" id="home-ask-ai" class="btn btn-secondary">
-                                        Ask RaushanSYNC AI
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1026,19 +1023,19 @@
         </section>
 
         <!-- ── Profile Help Modal — PRESERVED EXACTLY ────────────── -->
-        <div id="profile-help-modal" class="ai-chat-modal profile-help-modal" hidden aria-hidden="true" role="dialog"
+        <div id="profile-help-modal" class="profile-help-modal" hidden aria-hidden="true" role="dialog"
             aria-modal="true" aria-labelledby="profile-help-title">
-            <div class="ai-chat-overlay" data-profile-help-close></div>
-            <section class="ai-chat-panel profile-help-panel">
-                <header class="ai-chat-header">
-                    <div class="ai-chat-header-copy">
+            <div class="profile-help-overlay" data-profile-help-close></div>
+            <section class="profile-help-dialog">
+                <header class="profile-help-header">
+                    <div class="profile-help-header-copy">
                         <h2 id="profile-help-title">Complete your profile first</h2>
-                        <p id="profile-help-subtitle" class="ai-chat-subtitle">
+                        <p id="profile-help-subtitle" class="profile-help-subtitle">
                             Select your class or study track in the dashboard to unlock learning, dashboard access,
-                            and AI support.
+                            and progress features.
                         </p>
                     </div>
-                    <button id="profile-help-close" class="ai-chat-close" type="button"
+                    <button id="profile-help-close" class="profile-help-close" type="button"
                         aria-label="Close profile reminder">
                         ×
                     </button>
@@ -1064,31 +1061,6 @@
                 </div>
             </section>
         </div>
-
-        <!-- ── AI Chat Modal — PRESERVED EXACTLY ─────────────────── -->
-        <div id="ai-chat-modal" class="ai-chat-modal" hidden aria-hidden="true" role="dialog" aria-modal="true"
-            aria-labelledby="ai-chat-title">
-            <div class="ai-chat-overlay" data-ai-chat-close></div>
-            <section class="ai-chat-panel">
-                <header class="ai-chat-header">
-                    <div class="ai-chat-header-copy">
-                        <h2 id="ai-chat-title">RaushanSYNC AI Assistant</h2>
-                        <p id="ai-chat-subtitle" class="ai-chat-subtitle">Ask academic or non-academic questions
-                            anytime.</p>
-                    </div>
-                    <button id="ai-chat-close" class="ai-chat-close" type="button" aria-label="Close AI chat">×</button>
-                </header>
-                <div id="ai-chat-context" class="ai-chat-context" aria-live="polite"></div>
-                <div id="ai-chat-history" class="ai-chat-history" aria-live="polite"></div>
-                <form id="ai-chat-form" class="ai-chat-input-row">
-                    <label for="ai-chat-input" class="ai-chat-label">Ask RaushanSYNC AI</label>
-                    <textarea id="ai-chat-input" rows="2"
-                        placeholder="Ask anything about studies, exams, career, motivation, or productivity..."></textarea>
-                    <button id="ai-chat-send" type="submit">Send</button>
-                </form>
-            </section>
-        </div>
-
     </main>
 
     <div id="footer"></div>
@@ -1097,10 +1069,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
     <script src="/assets/js/auth-config.js"></script>
     <script src="/assets/js/auth-guard.js"></script>
-
-    <script src="/ai-chat.js"></script>
     <script src="/assets/js/homepage-hero.js"></script>
-
     <script src="assets/js/script.js"></script>
 
 
@@ -1114,5 +1083,4 @@
     </script>
 
 </body>
-
 </html>

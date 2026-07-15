@@ -548,29 +548,6 @@
             white-space: nowrap;
         }
 
-        .dashboard-ai-btn {
-            border-radius: 8px;
-        }
-
-        .dashboard-ai-btn.discuss-ai-btn {
-            margin-left: 0;
-            margin-top: 0;
-        }
-
-        .dashboard-ai-btn-icon {
-            width: 1rem;
-            height: 1rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .dashboard-ai-btn-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
         .btn-secondary {
             display: inline-block;
             padding: 0.75rem 1.5rem;
@@ -1051,8 +1028,7 @@
             z-index: 1;
         }
 
-        body.dashboard-page .modal,
-        body.dashboard-page .ai-chat-modal {
+        body.dashboard-page .modal {
             z-index: 1000;
         }
 
@@ -1445,16 +1421,6 @@
                     <p style="color: var(--secondary-text-color); margin-bottom: 1.5rem;">Your dashboard is ready! Explore RaushanSYNC Maths content to begin your learning journey.</p>
                     <div class="getting-started-actions">
                         <a href="/" class="btn-primary getting-started-btn">Explore Learning Resources</a>
-                        <button type="button" id="openDashboardAI" class="btn-primary getting-started-btn discuss-ai-btn dashboard-ai-btn" aria-label="Ask RaushanSYNC AI">
-                            <span class="dashboard-ai-btn-icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
-                                    <path d="M12 3.75l1.26 2.91 2.99 1.26-2.99 1.26L12 12.09l-1.26-2.91-2.99-1.26 2.99-1.26L12 3.75Z" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M18.5 11.25l.72 1.67 1.66.72-1.66.72-.72 1.67-.72-1.67-1.66-.72 1.66-.72.72-1.67Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M6 13.5l.94 2.18 2.18.94-2.18.94L6 19.74l-.94-2.18-2.18-.94 2.18-.94L6 13.5Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </span>
-                            <span>Ask RaushanSYNC AI</span>
-                        </button>
                     </div>
                 </div>
 
@@ -1561,27 +1527,6 @@
         </div>
     </div>
 
-    <div id="ai-chat-modal" class="ai-chat-modal" hidden aria-hidden="true" role="dialog" aria-modal="true"
-        aria-labelledby="ai-chat-title">
-        <div class="ai-chat-overlay" data-ai-chat-close></div>
-        <section class="ai-chat-panel">
-            <header class="ai-chat-header">
-                <div class="ai-chat-header-copy">
-                    <h2 id="ai-chat-title">RaushanSYNC AI Assistant</h2>
-                    <p id="ai-chat-subtitle" class="ai-chat-subtitle">Ask academic or non-academic questions anytime.</p>
-                </div>
-                <button id="ai-chat-close" class="ai-chat-close" type="button" aria-label="Close AI chat">×</button>
-            </header>
-            <div id="ai-chat-context" class="ai-chat-context" aria-live="polite"></div>
-            <div id="ai-chat-history" class="ai-chat-history" aria-live="polite"></div>
-            <form id="ai-chat-form" class="ai-chat-input-row">
-                <label for="ai-chat-input" class="ai-chat-label">Ask RaushanSYNC AI</label>
-                <textarea id="ai-chat-input" rows="2" placeholder="Ask anything about studies, exams, career, motivation, or productivity..."></textarea>
-                <button id="ai-chat-send" type="submit">Send</button>
-            </form>
-        </section>
-    </div>
-
     <!-- Load dependencies first (Supabase must come before auth-config.js) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
     <script src="/assets/js/auth-config.js"></script>
@@ -1593,7 +1538,6 @@
     
     <!-- Auth guard must be last (for protected pages) -->
     <script src="/assets/js/auth-guard.js"></script>
-    <script src="/ai-chat.js"></script>
 
     <script>
         let currentUser = null;
@@ -1605,7 +1549,7 @@
 
         const DELETE_ACCOUNT_ENDPOINT_CANDIDATES = [
             "/api/account/delete",
-            "https://quiz-ai-tutor.raushanguptaicloud.workers.dev/api/account/delete"
+            "https://account-deletion-api.raushanguptaicloud.workers.dev/api/account/delete"
         ];
 
         const criticalSettingsState = {
@@ -1637,7 +1581,7 @@
         }
 
         // Modal handlers - set up after DOM is ready
-        let modal, editBtn, closeBtn, cancelBtn, editForm, modalMessage, dashboardAIBtn;
+        let modal, editBtn, closeBtn, cancelBtn, editForm, modalMessage;
         let criticalSettingsSection;
         let criticalProceedBtn;
         let criticalDeletePanel;
@@ -1655,13 +1599,11 @@
             cancelBtn = document.getElementById("cancelBtn");
             editForm = document.getElementById("editProfileForm");
             modalMessage = document.getElementById("modalMessage");
-            dashboardAIBtn = document.getElementById("openDashboardAI");
 
             if (editBtn) editBtn.addEventListener("click", openEditModal);
             if (closeBtn) closeBtn.addEventListener("click", closeEditModal);
             if (cancelBtn) cancelBtn.addEventListener("click", closeEditModal);
             if (editForm) editForm.addEventListener("submit", handleEditFormSubmit);
-            if (dashboardAIBtn) dashboardAIBtn.addEventListener("click", openDashboardAIChat);
 
             // Close modal when clicking outside of it
             if (modal) {
@@ -2521,31 +2463,6 @@
             document.documentElement.classList.remove("auth-pending");
         }
 
-        function openDashboardAIChat() {
-            if (typeof window.initAIChat !== "function") {
-                alert("AI assistant is not available right now. Please refresh and try again.");
-                return;
-            }
-
-            const learnerName = (currentProfile?.full_name) || currentUser?.user_metadata?.full_name || "Student";
-
-            window.initAIChat({
-                practiceTitle: "Student Support",
-                questionText: "General student guidance and support",
-                userAnswer: "Student: " + learnerName,
-                correctAnswer: "Not provided",
-                explanation: "Covers academics, exam prep, career guidance, motivation, time management, college issues, and productivity.",
-                pageUrl: window.location.href
-            }, {
-                mode: "student-support",
-                title: "RaushanSYNC AI Assistant",
-                subtitle: "Ask academic or non-academic questions anytime.",
-                assistantGreeting: "Hi! I am RaushanSYNC AI Assistant. I can help with academic doubts, study planning, exam preparation, career guidance, motivation, time management, college issues, personal productivity, and general student support.",
-                inputLabel: "Ask RaushanSYNC AI",
-                inputPlaceholder: "Ask anything about studies, exams, career, motivation, college life, or productivity...",
-                showContext: false
-            });
-        }
 
         function openEditModal() {
             if (!currentUser) return;
