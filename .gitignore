@@ -31,3 +31,6 @@ yarn-error.log*
 
 # Yarn Integrity file
 .yarn-integrity
+
+# CURRENTLY REMOVED
+.CURRENTLY_REMOVED

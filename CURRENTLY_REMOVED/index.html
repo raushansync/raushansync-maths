@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6" id="theme-color-meta">
+
+    <title>RaushanSYNC Maths | Mathematics from First Principles</title>
+
+    <meta name="description"
+        content="RaushanSYNC Maths is a first-principles learning platform for Mathematics—helping learners develop deep mathematical understanding, from foundational concepts to advanced ideas, and see how mathematical knowledge connects, evolves, and explains the world.">
+
+    <meta name="author" content="Raushan Kumar">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://maths.raushansync.com/">
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="RaushanSYNC Maths">
+    <meta property="og:title" content="RaushanSYNC Maths | Mathematics from First Principles">
+    <meta property="og:description"
+        content="RaushanSYNC Maths focuses on understanding Mathematics through first principles—emphasizing clarity, reasoning, and how mathematical ideas connect and evolve across levels.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://maths.raushansync.com/">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RaushanSYNC Maths | Mathematics from First Principles">
+    <meta name="twitter:description"
+        content="A first-principles mathematics learning platform focused on conceptual clarity, reasoning, and deep understanding across Algebra, Geometry, Calculus, and more.">
+    <meta name="twitter:site" content="@raushansync">
+    <meta name="twitter:image" content="https://maths.raushansync.com/assets/images/og-image.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Stylesheet — PRESERVED EXACTLY -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Auth hero reservation script — PRESERVED EXACTLY -->
+    <script>
+        (function initHomepageHeroReservation() {
+            if (!document.documentElement.classList) {
+                return;
+            }
+            const authStorageKeyPattern = /^(supabase\.auth\.token|sb-.*-auth-token(?:-code-verifier)?)$/;
+            const storageHasAuthKey = (storage) => {
+                if (!storage) return false;
+                for (let index = 0; index < storage.length; index += 1) {
+                    const key = storage.key(index);
+                    if (typeof key === 'string' && authStorageKeyPattern.test(key)) return true;
+                }
+                return false;
+            };
+            try {
+                if (storageHasAuthKey(window.localStorage) || storageHasAuthKey(window.sessionStorage)) {
+                    document.documentElement.classList.add('home-hero-reserved');
+                }
+            } catch (error) {
+                return;
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <!-- PRESERVED INLINE STYLES — Exact copy from original -->
+    <style>
+        .home-page .welcome-section .welcome-actions {
+            margin: 1rem 0 1rem;
+            min-height: 4.5rem;
+        }
+
+        html.home-hero-reserved .home-page .welcome-section .welcome-actions {
+            min-height: 16rem;
+        }
+
+        .welcome-section #auth-buttons-guest {
+            align-self: flex-start;
+            align-items: start;
+        }
+
+        .welcome-section #auth-buttons-guest,
+        .welcome-section #auth-buttons-user {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .home-page .welcome-section .welcome-actions {
+                min-height: 8rem;
+            }
+
+            html.home-hero-reserved .home-page .welcome-section .welcome-actions {
+                min-height: 20rem;
+            }
+
+            .welcome-section #auth-buttons-guest {
+                align-self: center;
+            }
+        }
+    </style>
+
+    <!-- ============================================================
+         PREMIUM OBSERVATORY REDESIGN — Additive layer over style.css
+         All selectors are additive; nothing destructive to existing JS hooks
+         ============================================================ -->
+    <style>
+        /* ── Body atmosphere ─────────────────────────────────────── */
+        body.home-page {
+            position: relative;
+            background: linear-gradient(145deg, #eaf2ff 0%, #f8fbff 44%, #e6f0ff 100%);
+        }
+
+        .dark-mode body.home-page {
+            background: linear-gradient(145deg, #020c1b 0%, #030e22 50%, #020a17 100%);
+        }
+
+        /* Scientific grid overlay */
+        body.home-page::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(37, 99, 235, 0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.055) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dark-mode body.home-page::after {
+            background-image:
+                linear-gradient(rgba(96, 165, 250, 0.11) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(96, 165, 250, 0.11) 1px, transparent 1px);
+        }
+
+        /* Lift page content above the decorative canvas. Header uses shared site CSS. */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .home-page main {
+            padding-top: calc(var(--header-height) + 0.85rem) !important;
+        }
+
+        /* ── Welcome section spacing ─────────────────────────────── */
+        .home-page .welcome-section {
+            padding-top: 0 !important;
+            padding-bottom: 2.5rem !important;
+        }
+
+        /* ── HERO SPLIT LAYOUT ───────────────────────────────────── */
+        .hero-split {
+            display: grid;
+            grid-template-columns: minmax(700px, 0.95fr) minmax(360px, 0.85fr);
+            gap: 1.6rem;
+            align-items: center;
+            min-height: auto;
+            padding: 0.85rem 0 1.35rem;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.85rem;
+            max-width: 760px;
+            text-align: left;
+            animation: heroFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .hero-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-top: 0.35rem;
+            position: relative;
+            top: -1.25rem;
+            animation: heroFadeUp 0.75s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes heroFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Hero Eyebrow Badge ──────────────────────────────────── */
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.3rem 0.88rem;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.12);
+            border: 1px solid rgba(37, 99, 235, 0.32);
+            color: #1d4ed8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .dark-mode .hero-badge {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: rgba(96, 165, 250, 0.22);
+            color: #93c5fd;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.7);
+            animation: dotPulse 2.5s ease-in-out infinite;
+        }
+
+        .dark-mode .hero-badge-dot {
+            background: #60a5fa;
+            box-shadow: 0 0 6px rgba(96, 165, 250, 0.8);
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.75);
+            }
+        }
+
+        /* ── Hero H1 ─────────────────────────────────────────────── */
+        .hero-left h1 {
+            font-size: clamp(1.75rem, 2.65vw, 2.55rem) !important;
+            font-weight: 700 !important;
+            line-height: 1.12 !important;
+            letter-spacing: 0 !important;
+            margin-bottom: 0 !important;
+            max-width: 760px;
+            text-align: left !important;
+            color: var(--text-color);
+        }
+
+        .hero-title-line {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .hero-brand-span {
+            background: linear-gradient(125deg, #1d4ed8 0%, #3b82f6 45%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-science-span {
+            display: block;
+            font-size: 0.58em;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--secondary-text-color);
+            margin-top: 0.1em;
+            -webkit-text-fill-color: unset;
+            background: none;
+        }
+
+        /* ── Hero Subtitle ───────────────────────────────────────── */
+        .hero-subtitle {
+            font-size: 0.95rem !important;
+            color: #475569 !important;
+            line-height: 1.6 !important;
+            max-width: 44ch;
+            margin: 0 !important;
+            text-align: left !important;
+        }
+
+        .dark-mode .hero-subtitle {
+            color: #b8c4d6 !important;
+        }
+
+        /* ── Domain Pills ────────────────────────────────────────── */
+        .hero-domains {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .hero-domain-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 2.35rem;
+            padding: 0.35rem 0.75rem 0.35rem 0.5rem;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            border: 1px solid rgba(59, 130, 246, 0.16);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 10px 24px rgba(15, 23, 42, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .hero-domain-pill:hover {
+            transform: translateY(-1px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow:
+                0 12px 24px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-domain-icon {
+            width: 1.35rem;
+            height: 1.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            border-radius: 7px;
+            background: rgba(59, 130, 246, 0.11);
+            color: currentColor;
+            font-size: 0.72rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .hero-domain-pill.physics {
+            border-color: rgba(37, 99, 235, 0.34);
+            color: #1d4ed8;
+        }
+
+        .hero-domain-pill.chemistry {
+            border-color: rgba(8, 145, 178, 0.34);
+            color: #0e7490;
+        }
+
+        .hero-domain-pill.biology {
+            border-color: rgba(5, 150, 105, 0.34);
+            color: #047857;
+        }
+
+        .hero-domain-pill.enviro {
+            border-color: rgba(101, 163, 13, 0.34);
+            color: #3f6212;
+        }
+
+        .hero-domain-pill.chemistry .hero-domain-icon {
+            background: rgba(6, 182, 212, 0.12);
+        }
+
+        .hero-domain-pill.biology .hero-domain-icon {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .hero-domain-pill.enviro .hero-domain-icon {
+            background: rgba(132, 204, 22, 0.14);
+        }
+
+        .dark-mode .hero-domain-pill {
+            background: rgba(8, 20, 42, 0.62);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .dark-mode .hero-domain-pill.physics {
+            border-color: rgba(96, 165, 250, 0.18);
+            color: #93c5fd;
+        }
+
+        .dark-mode .hero-domain-pill.chemistry {
+            border-color: rgba(34, 211, 238, 0.18);
+            color: #67e8f9;
+        }
+
+        .dark-mode .hero-domain-pill.biology {
+            border-color: rgba(52, 211, 153, 0.18);
+            color: #6ee7b7;
+        }
+
+        .dark-mode .hero-domain-pill.enviro {
+            border-color: rgba(163, 230, 53, 0.18);
+            color: #bef264;
+        }
+
+        /* ── Welcome actions alignment inside hero-left ──────────── */
+        .hero-left .welcome-actions {
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            max-width: 760px;
+        }
+
+        .hero-left #auth-buttons-guest {
+            justify-content: flex-start !important;
+        }
+
+        /* ── Hero Primary Button ─────────────────────────────────── */
+        .hero-left .btn-primary {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 52%, #0ea5e9 100%);
+            background-size: 200% 200%;
+            animation: btnFlow 7s linear infinite;
+            box-shadow:
+                0 10px 24px rgba(59, 130, 246, 0.26),
+                0 2px 6px rgba(59, 130, 246, 0.14),
+                inset 0 1px 0 rgba(255, 255, 255, 0.22);
+            border-radius: 10px !important;
+            font-weight: 600;
+            letter-spacing: 0.015em;
+            min-height: 2.75rem;
+            transition: transform 0.22s ease, box-shadow 0.25s ease, filter 0.2s ease;
+        }
+
+        .hero-left .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: -80%;
+            left: -45%;
+            width: 28%;
+            height: 260%;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+            transform: rotate(18deg);
+            opacity: 0;
+            animation: btnSweep 5s ease-in-out infinite;
+        }
+
+        .hero-left .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.07);
+            box-shadow:
+                0 14px 32px rgba(59, 130, 246, 0.48),
+                0 4px 8px rgba(59, 130, 246, 0.24);
+        }
+
+        .hero-left .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        @keyframes btnFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes btnSweep {
+
+            0%,
+            38% {
+                opacity: 0;
+                transform: translateX(-280%) rotate(18deg);
+            }
+
+            52% {
+                opacity: 0.55;
+            }
+
+            72%,
+            100% {
+                opacity: 0;
+                transform: translateX(420%) rotate(18deg);
+            }
+        }
+
+        /* ── Hero Secondary Button ───────────────────────────────── */
+        .hero-left .btn-secondary {
+            border-radius: 10px !important;
+            border-color: rgba(37, 99, 235, 0.42) !important;
+            color: #1d4ed8 !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow:
+                0 10px 24px rgba(15, 23, 42, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            min-height: 2.75rem;
+            transition: all 0.25s ease !important;
+        }
+
+        .dark-mode .hero-left .btn-secondary {
+            border-color: rgba(96, 165, 250, 0.28) !important;
+            color: #93c5fd !important;
+            background: rgba(15, 23, 42, 0.68) !important;
+            box-shadow:
+                0 10px 24px rgba(0, 0, 0, 0.18),
+                inset 0 1px 0 rgba(96, 165, 250, 0.08) !important;
+        }
+
+        .hero-left .btn-secondary:hover {
+            background: rgba(239, 246, 255, 0.92) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .dark-mode .hero-left .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.16) !important;
+            border-color: rgba(147, 197, 253, 0.42) !important;
+            color: #bfdbfe !important;
+            box-shadow:
+                0 14px 28px rgba(0, 0, 0, 0.24),
+                inset 0 1px 0 rgba(147, 197, 253, 0.1) !important;
+        }
+
+        .hero-left .btn-secondary:focus-visible {
+            outline: 3px solid rgba(96, 165, 250, 0.34);
+            outline-offset: 3px;
+        }
+
+        .hero-left #auth-buttons-user.home-learning-card {
+            width: 100% !important;
+            max-width: 760px !important;
+        }
+
+        .home-learning-actions {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.65rem !important;
+            width: 100% !important;
+        }
+
+        .home-learning-actions .btn {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            min-width: 0 !important;
+            padding: 0.72rem 1.05rem !important;
+            font-size: 0.92rem !important;
+            white-space: nowrap;
+        }
+
+        /* ── Home learning card glass upgrade ───────────────────── */
+        .welcome-section #auth-buttons-user.home-learning-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(14px) !important;
+            -webkit-backdrop-filter: blur(14px) !important;
+            border: 1px solid rgba(37, 99, 235, 0.24) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 12px 34px rgba(37, 99, 235, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+        }
+
+        .dark-mode .welcome-section #auth-buttons-user.home-learning-card {
+            background: rgba(6, 15, 32, 0.78) !important;
+            border-color: rgba(96, 165, 250, 0.12) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+        }
+
+        /* ── Hero profile image ─────────────────────────────────── */
+        .hero-profile-motion {
+            width: 300px;
+            height: 300px;
+            margin-top: -10px;
+            animation: portraitFloat 6s ease-in-out infinite;
+        }
+
+        .hero-profile {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(59, 130, 246, 0.42);
+            box-shadow: 0 18px 44px rgba(37, 99, 235, 0.2), 0 0 28px rgba(59, 130, 246, 0.2);
+            transition: box-shadow 340ms ease;
+        }
+
+        .hero-profile img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            object-fit: cover;
+            object-position: 58% 35%;
+        }
+
+        .hero-profile:hover {
+            box-shadow: 0 22px 52px rgba(37, 99, 235, 0.24), 0 0 34px rgba(59, 130, 246, 0.26);
+        }
+
+        @keyframes portraitFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+        .dark-mode .hero-profile {
+            border-color: rgba(96, 165, 250, 0.28);
+            box-shadow: 0 18px 42px rgba(2, 6, 23, 0.56), 0 0 26px rgba(96, 165, 250, 0.22);
+        }
+
+        .dark-mode .hero-profile:hover {
+            box-shadow: 0 20px 46px rgba(2, 6, 23, 0.62), 0 0 32px rgba(96, 165, 250, 0.28);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           HERO PALETTE — Premium Glass Upgrade
+           ═══════════════════════════════════════════════════════ */
+
+        .home-page .welcome-section .palette.hero-palette {
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(14px) saturate(1.35) !important;
+            -webkit-backdrop-filter: blur(14px) saturate(1.35) !important;
+            border: 1px solid rgba(37, 99, 235, 0.24) !important;
+            border-radius: 16px !important;
+            box-shadow:
+                0 12px 34px rgba(37, 99, 235, 0.11),
+                inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+            padding: 1.9rem 2.3rem !important;
+            animation: heroFadeUp 0.75s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .dark-mode body.home-page .welcome-section .palette.hero-palette {
+            background: rgba(5, 14, 30, 0.74) !important;
+            border-color: rgba(96, 165, 250, 0.1) !important;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(96, 165, 250, 0.05) !important;
+        }
+
+        .hero-palette p {
+            font-size: 1rem;
+            line-height: 1.72;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════ */
+
+        @media (max-width: 1024px) {
+            .hero-split {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                padding: 1.35rem 0 1.15rem;
+                gap: 1.4rem;
+            }
+
+            .hero-left {
+                align-items: center;
+                max-width: none;
+                text-align: center;
+            }
+
+            .hero-left h1 {
+                text-align: center !important;
+            }
+
+            .hero-left .welcome-actions {
+                justify-content: center !important;
+                max-width: 680px;
+            }
+
+            .hero-left #auth-buttons-guest {
+                justify-content: center !important;
+            }
+
+            .hero-subtitle {
+                text-align: center;
+                max-width: none;
+            }
+
+            .hero-domains {
+                justify-content: center;
+            }
+
+            .hero-right {
+                justify-content: center;
+                width: 100%;
+                padding-top: 0.35rem;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 1120px) {
+            .hero-split {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+
+            .hero-right {
+                justify-content: center;
+                width: 100%;
+                padding-top: 0.35rem;
+                top: 0;
+            }
+
+            .hero-profile-motion {
+                width: 250px;
+                height: 250px;
+            }
+
+            .hero-left {
+                align-items: center;
+                max-width: 760px;
+                text-align: center;
+            }
+
+            .hero-left h1 {
+                text-align: center !important;
+            }
+
+            .hero-subtitle {
+                text-align: center !important;
+            }
+
+            .hero-domains {
+                justify-content: center;
+            }
+
+            .hero-left .welcome-actions,
+            .hero-left #auth-buttons-guest {
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-split {
+                padding: 1.15rem 0 1.05rem;
+                gap: 1.25rem;
+            }
+
+            .hero-profile-motion {
+                width: 195px;
+                height: 195px;
+            }
+
+            .hero-left h1 {
+                font-size: 1.9rem !important;
+                line-height: 1.16 !important;
+                margin-bottom: 0.2rem !important;
+            }
+
+            .hero-science-span {
+                margin-top: 0.18em;
+                letter-spacing: 0.08em;
+            }
+
+            .hero-badge {
+                font-size: 0.76rem;
+                font-weight: 600;
+            }
+
+            .hero-subtitle {
+                line-height: 1.72 !important;
+                margin-top: 0.15rem !important;
+                text-align: center !important;
+            }
+
+            .hero-domains {
+                display: none;
+            }
+
+            .home-learning-actions {
+                grid-template-columns: 1fr !important;
+            }
+
+            .home-learning-actions .btn {
+                white-space: normal;
+            }
+
+            .home-page .welcome-section .palette.hero-palette {
+                padding: 1.3rem 1.4rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-split {
+                padding: 1.35rem 0 1.15rem;
+                gap: 1.35rem;
+            }
+
+            .hero-profile-motion {
+                width: 195px;
+                height: 195px;
+            }
+
+            .hero-left {
+                gap: 1rem;
+            }
+
+            .hero-badge {
+                font-size: 0.74rem;
+                font-weight: 600;
+            }
+
+            .hero-left h1 {
+                font-size: 1.86rem !important;
+                line-height: 1.18 !important;
+            }
+
+            .hero-title-line {
+                white-space: normal;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem !important;
+                line-height: 1.75 !important;
+                text-align: center !important;
+            }
+        }
+
+        /* ── Reduced motion ──────────────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+
+            .hero-left,
+            .hero-right,
+            .home-page .welcome-section .palette.hero-palette,
+            .hero-profile-motion,
+            .hero-badge-dot,
+            .hero-left .btn-primary,
+            .hero-left .btn-primary::before {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+    </style>
+
+    <meta property="og:image" content="https://maths.raushansync.com/assets/og/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+</head>
+
+<body class="home-page">
+
+    <!-- ── Header — PRESERVED EXACTLY ─────────────────────────── -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">RaushanSYNC Maths</a>
+            <div id="nav"></div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="welcome-section">
+            <div class="container">
+
+                <!-- ═══ HERO SPLIT ════════════════════════════════ -->
+                <div class="hero-split">
+
+                    <!-- HERO LEFT -->
+                    <div class="hero-left">
+
+                        <!-- Eyebrow badge -->
+                        <div class="hero-eyebrow">
+                            <span class="hero-badge">
+                                <span class="hero-badge-dot" aria-hidden="true"></span>
+                                First Principles Learning
+                            </span>
+                        </div>
+
+                        <!-- H1 -->
+                        <h1><span class="hero-title-line">Welcome to <span
+                                    class="hero-brand-span">RaushanSYNC</span></span>
+                            <span class="hero-science-span">Mathematics Platform</span>
+                        </h1>
+
+                        <!-- Short mission line -->
+                        <p class="hero-subtitle">
+                            Hello! I’m Raushan.
+                        </p>
+                        <p class="hero-subtitle">
+                            On this website, I teach Mathematics from first principles. Here you’ll discover carefully
+                            designed articles, problem-solving exercises, and video lessons that help you understand
+                            concepts deeply instead of simply memorising formulas.
+                        </p>
+
+                        <!-- Domain pills -->
+                        <div class="hero-domains" aria-hidden="true">
+                            <span class="hero-domain-pill physics">
+                                <span class="hero-domain-icon">A</span>
+                                Algebra
+                            </span>
+                            <span class="hero-domain-pill chemistry">
+                                <span class="hero-domain-icon">G</span>
+                                Geometry
+                            </span>
+                            <span class="hero-domain-pill biology">
+                                <span class="hero-domain-icon">∫</span>
+                                Calculus
+                            </span>
+                            <span class="hero-domain-pill enviro">
+                                <span class="hero-domain-icon">σ</span>
+                                Statistics
+                            </span>
+                        </div>
+
+                        <!-- Auth buttons — all IDs and JS hooks intact -->
+                        <div class="welcome-actions">
+                            <div id="auth-buttons-guest">
+                                <a href="/signup" class="btn btn-primary">
+                                    Get Started
+                                </a>
+                                <a href="/login" class="btn btn-secondary">
+                                    Already have an account? Sign in
+                                </a>
+                            </div>
+
+                            <div id="auth-buttons-user" class="palette important home-learning-card">
+                                <span class="home-learning-badge" id="home-learning-badge">Your learning track</span>
+                                <h2 id="home-learning-title">Continue your mathematics journey</h2>
+                                <p id="home-learning-copy">
+                                    Your class or study track will appear here once your profile is ready.
+                                </p>
+
+                                <div class="home-learning-actions">
+                                    <button type="button" id="home-start-learning" class="btn btn-primary">
+                                        Start Learning
+                                    </button>
+                                    <button type="button" id="home-dashboard-link" class="btn btn-secondary">
+                                        Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- END HERO LEFT -->
+                    <div class="hero-right">
+                        <div class="hero-profile-motion">
+                            <figure class="hero-profile">
+                                <img src="/Raushan_Hero_Image.webp" width="1200" height="1200" loading="lazy"
+                                    alt="Portrait of Raushan, founder of RaushanSYNC Science">
+                            </figure>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- ═══ END HERO SPLIT ════════════════════════════ -->
+
+
+                <!-- ═══ HERO PALETTE ═══════════════════════════════ -->
+                <div class="palette important hero-palette">
+                    <p>
+                        I created this platform because I believe
+                        mathematics should be understood from first principles, not by memorising formulas,
+                        procedures, or shortcuts. My aim is to help you develop intuition by understanding
+                        why mathematical ideas work.
+                    </p>
+
+                    <p>
+                        Whether you're beginning with Class 6 mathematics or exploring more advanced topics,
+                        we'll study <strong>Algebra</strong>, <strong>Geometry</strong>,
+                        <strong>Calculus</strong>, and <strong>Statistics &amp; Probability</strong>
+                        through logic, reasoning, proof, and pattern recognition instead of simply
+                        memorising formulas and methods.
+                    </p>
+
+                    <blockquote class="hero-attribution">
+                        I hope this website helps you become a curious learner, think mathematically,
+                        and develop the confidence to solve problems through logic and reasoning.
+                    </blockquote>
+                </div>
+                <!-- ═══ END HERO PALETTE ══════════════════════ -->
+
+            </div>
+        </section>
+
+        <!-- ── Profile Help Modal — PRESERVED EXACTLY ────────────── -->
+        <div id="profile-help-modal" class="profile-help-modal" hidden aria-hidden="true" role="dialog"
+            aria-modal="true" aria-labelledby="profile-help-title">
+            <div class="profile-help-overlay" data-profile-help-close></div>
+            <section class="profile-help-dialog">
+                <header class="profile-help-header">
+                    <div class="profile-help-header-copy">
+                        <h2 id="profile-help-title">Complete your profile first</h2>
+                        <p id="profile-help-subtitle" class="profile-help-subtitle">
+                            Select your class or study track in the dashboard to unlock learning, dashboard access,
+                            and progress features.
+                        </p>
+                    </div>
+                    <button id="profile-help-close" class="profile-help-close" type="button"
+                        aria-label="Close profile reminder">
+                        ×
+                    </button>
+                </header>
+
+                <div class="profile-help-body">
+                    <p class="profile-help-copy">
+                        We could not open that action because your profile still needs a class or study track.
+                    </p>
+                    <p class="profile-help-copy">
+                        Open the dashboard profile editor, choose your education level, and come back to continue.
+                    </p>
+                </div>
+
+                <div class="profile-help-actions">
+                    <a id="profile-help-dashboard-link" href="/dashboard?edit-profile=1#profileSection"
+                        class="btn btn-primary">
+                        Open Dashboard Profile Editor
+                    </a>
+                    <button type="button" id="profile-help-dismiss" class="btn btn-secondary">
+                        Maybe later
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <!-- ── Authentication Scripts — PRESERVED EXACTLY ─────────────── -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="/assets/js/auth-config.js"></script>
+    <script src="/assets/js/auth-guard.js"></script>
+    <script src="/assets/js/homepage-hero.js"></script>
+    <script src="assets/js/script.js"></script>
+
+
+    <!-- ── Service Worker — PRESERVED EXACTLY ─────────────────────── -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered successfully'))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        }
+    </script>
+
+</body>
+</html>
